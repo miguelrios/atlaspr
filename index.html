@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+</style>
+<body>
+<script src="./d3.js"></script>
+<script src="./topojson.js"></script>
+<script>
+var width = 960,
+    height = 1160;
+
+var color_scale = d3.scale.category20b();
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var projection = d3.geo.mercator()
+    .scale(125000)
+    .center([-66.401367,18.23033])
+    .translate([width / 2, height / 6]);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+d3.json("barrios-geo.json", function(error, barrios) {
+  // var barrios_path = topojson.feature(barrios, barrios.objects.barrios);
+  console.log(barrios)
+  svg.selectAll(".barrio")
+    .data(barrios.features)
+    .enter()
+      .append("path")  
+        .attr("d", path)
+        .attr("class", "barrio")
+        .style("stroke-width", 1)
+        // .style("fill", function(d){return color_scale(Math.floor(Math.random()*20))})
+        .style("fill", "none")
+        .style("stroke", "#ccc");
+
+  d3.json("pueblos-geo.json", function(error, pueblos) {
+    // var pueblos_path = topojson.feature(pueblos, pueblos.objects.pueblos);
+    svg.selectAll(".pueblo")
+      .data(pueblos.features)
+      .enter()
+        .append("path")  
+          .attr("d", path)
+          .attr("class", "pueblo")
+          .style("stroke-width", 1)
+          .style("fill", function(d){return color_scale(Math.floor(Math.random()*20))})
+          .style("fill-opacity", 0.75)
+          .style("stroke", "#333")
+          .on("click",function(d){
+            var color_index = Math.floor(Math.random()*20);
+            console.log(d.properties.NAME)
+            d3.select(this).style("fill", color_scale(color_index));
+          })
+          .on("mouseover", function(d){
+            d3.select(this).style("stroke-width", 3);
+          })
+          .on("mouseout", function(d){
+            d3.select(this).style("stroke-width", 1);
+          });
+  });
+});
+
+</script>

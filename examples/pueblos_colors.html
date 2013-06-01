@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+  .q0-9 { fill:rgb(247,251,255); }
+  .q1-9 { fill:rgb(222,235,247); }
+  .q2-9 { fill:rgb(198,219,239); }
+  .q3-9 { fill:rgb(158,202,225); }
+  .q4-9 { fill:rgb(107,174,214); }
+  .q5-9 { fill:rgb(66,146,198); }
+  .q6-9 { fill:rgb(33,113,181); }
+  .q7-9 { fill:rgb(8,81,156); }
+  .q8-9 { fill:rgb(8,48,107); }
+  .grey { fill:rgb(200,200,200); }
+</style>
+<script src="../js/lib/d3.js"></script>
+<script src="../js/lib/klass.js"></script>
+<script src="../js/prmap.js"></script>
+<body>
+<h3>Pueblos - Partidos Políticos en el poder (2012)</h3>
+<div id = 'partidos-map'>
+
+</div>
+<h3>Pueblos - Población en el 2012</h3>
+<div id = 'poblacion-map'>
+</div>
+<script type = 'text/javascript'>
+  var node = document.getElementById("poblacion-map");
+  d3.json("../data/munidata.json", function(data){
+    var pop_datamap = {};
+    //use FIPS code as key
+    data.forEach(function(pueblo){
+      var fips_3digits = pueblo.fips.length == 1 ? ("00" + pueblo.fips) : 
+        (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
+      pop_datamap[fips_3digits] = pueblo.population;
+    });
+    var pop_map = new PRMap({node: node, tiles: 'pueblos', on_ready: function(){
+      pop_map.encode_quan(pop_datamap);
+    }});
+    node = document.getElementById("partidos-map");
+
+    var party_datamap = {};
+    data.forEach(function(pueblo){
+      var fips_3digits = pueblo.fips.length == 1 ? ("00" + pueblo.fips) : 
+        (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
+      party_datamap[fips_3digits] = pueblo.party;
+    });
+    var party_map = new PRMap({node: node, tiles: 'pueblos', on_ready: function(){
+      party_map.encode_qual(party_datamap, {"PPD": "#ff0000", "PNP": "#0000ff"});
+    }});
+  });
+</script>

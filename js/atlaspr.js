@@ -3,7 +3,8 @@ var AtlasPR = klass(function (options) {
   this.tiles = Array.isArray(options.tiles) ? options.tiles : [options.tiles || 'isla'];
   this.main_tile = this.tiles[0];
   this.options.events = options.events || {};
-  this.path = "https://raw.github.com/miguelrios/atlaspr/master/geotiles/puertorico-geo.json";
+  //WARNING: only here for github pages version of lib
+  this.path = "http://miguelrios.github.io/atlaspr/geotiles/puertorico-geo.json";
   this.maps = {};
   this.meta_attributes = {
     "barrios": {

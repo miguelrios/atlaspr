@@ -2,11 +2,13 @@
 <meta charset="utf-8">
 <link rel="stylesheet" type="text/css" href="../css/atlaspr.css">
 <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
-<script src="../../js/lib/d3.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.1.6/d3.min.js"></script>
 <script src="../js/lib/klass.js"></script>
-<script src="../js/prmap.js"></script>
+<script src="../js/atlaspr.js"></script>
 <body>
-  <a href = '/'><h1 id = 'title'>Atlas PR <small>Free, open, interactive and detailed maps of Puerto Rico for your web applications.</
+  <a href = '/'>
+    <h1 id = 'title'>Atlas PR<small>Free, open, interactive and detailed maps of Puerto Rico for your web applications.</small></h1>
+  </a>
   <div id = 'map'></div>
   <p id = 'barrio'></p>
   <div id = 'menu'><a href = 'examples/index.html'>Examples</a> | <a href = 'docs.html'>Documentation</a> | <a href = 'https://github.com/miguelrios/atlaspr'>Source code</a></div>
@@ -34,7 +36,7 @@
     var hover = function hover(info, path){
       d3.select("#pueblo").text(info.properties.NAME);
     };
-    var map = new PRMap({node: node, size: "large" ,tiles: ["isla",'barrios','pueblos'], on_ready: ready,
+    var map = new AtlasPR({node: node, size: "large" ,tiles: ["isla",'barrios','pueblos'], on_ready: ready,
       events: {
         on_mouseover: hover
       }

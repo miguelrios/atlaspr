@@ -1,4 +1,4 @@
-var PRMap = klass(function (options) {
+var AtlasPR = klass(function (options) {
   this.options = options;
   this.tiles = Array.isArray(options.tiles) ? options.tiles : [options.tiles || 'isla'];
   this.main_tile = this.tiles[0];

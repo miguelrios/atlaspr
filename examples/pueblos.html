@@ -4,11 +4,13 @@
 <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 <script src="../../js/lib/d3.js"></script>
 <script src="../js/lib/klass.js"></script>
-<script src="../js/prmap.js"></script>
+<script src="../js/atlaspr.js"></script>
 <body>
-  <a href = '/'><h1 id = 'title'>Atlas PR <small>Free, open, interactive and detailed maps of Puerto Rico for your web applications.</small></h1></a>
+  <a href = '/'>
+    <h1 id = 'title'>Atlas PR<small>Free, open, interactive and detailed maps of Puerto Rico for your web applications.</small></h1>
+  </a>
   <h2>Examples<small>Municipalities maps (<a href = "https://github.com/miguelrios/atlaspr/blob/master/examples/pueblos.html">source code</a>)</small></h2>
-<h3>Pueblos - Partidos Políticos en el poder (2012)</h3>
+<h1>Pueblos - Partidos Políticos en el poder (2012)</h3>
 <div id = 'partidos-map'>
 
 </div>
@@ -25,7 +27,7 @@
         (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
       pop_datamap[fips_3digits] = pueblo.population;
     });
-    var pop_map = new PRMap({node: node, size: "large", tiles: 'pueblos', on_ready: function(){
+    var pop_map = new AtlasPR({node: node, size: "large", tiles: 'pueblos', on_ready: function(){
       pop_map.encode_quan(pop_datamap);
     }});
     node = document.getElementById("partidos-map");
@@ -36,7 +38,7 @@
         (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
       party_datamap[fips_3digits] = pueblo.party;
     });
-    var party_map = new PRMap({node: node, size: "large",tiles: 'pueblos', on_ready: function(){
+    var party_map = new AtlasPR({node: node, size: "large",tiles: 'pueblos', on_ready: function(){
       party_map.encode_qual(party_datamap, {"PPD": "#ff0000", "PNP": "#0000ff"});
     }});
   });

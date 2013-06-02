@@ -4,35 +4,35 @@
 <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 <script src="../../js/lib/d3.js"></script>
 <script src="../js/lib/klass.js"></script>
-<script src="../js/prmap.js"></script>
+<script src="../js/atlaspr.js"></script>
 <body>
-  <a href = '/'><h1 id = 'title'>Atlas PR <small>Free, open, interactive and detailed maps of Puerto Rico for your web applications.</
+  <a href = '/'><h1 id = 'title'>Atlas PR<small>Free, open, interactive and detailed maps of Puerto Rico for your web applications.</small></h1></a>
   <h2>Examples<small>Blank maps (<a href = "https://github.com/miguelrios/atlaspr/blob/master/examples/blank.html">source code</a>)</small></h2>
   <h3>Isla</h3>
 <div id = 'isla-map'>
   <script type = 'text/javascript'>
     var node = document.getElementById("isla-map");
-    var map = new PRMap({node: node, size: "large", tiles: 'isla'});
+    var map = new AtlasPR({node: node, size: "large", tiles: 'isla'});
   </script>
 </div>
 <h3>Pueblos</h3>
 <div id = 'pueblos-map'>
   <script type = 'text/javascript'>
     var node = document.getElementById("pueblos-map");
-    var map = new PRMap({node: node, tiles: 'pueblos', size: "large"});
+    var map = new AtlasPR({node: node, tiles: 'pueblos', size: "large"});
   </script>
 </div>
 <h3>Barrios</h3>
 <div id = 'barrios-map'>
   <script type = 'text/javascript'>
     var node = document.getElementById("barrios-map");
-    var map = new PRMap({node: node, size: "large", tiles: 'barrios'});
+    var map = new AtlasPR({node: node, size: "large", tiles: 'barrios'});
   </script>
 </div>
 <h3>Todos</h3>
 <div id = 'ambos-map'>
   <script type = 'text/javascript'>
     var node = document.getElementById("ambos-map");
-    var map = new PRMap({node: node, size: "large", tiles: ['barrios','pueblos', 'isla']});
+    var map = new AtlasPR({node: node, size: "large", tiles: ['barrios','pueblos', 'isla']});
   </script>
 </div>

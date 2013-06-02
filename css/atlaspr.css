@@ -12,6 +12,7 @@
     font-family: 'PT Sans', sans-serif;
     font-weight: 400;
     color: #333;
+    font-size: 18px;
   }
   #title{
     font-size: 72px;
@@ -23,7 +24,7 @@
     font-size: 18px;
   }
   h1 small{
-    margin-left: 0px;
+    margin-left: 5px;
   }
   h2 small{
     margin-left: 10px;

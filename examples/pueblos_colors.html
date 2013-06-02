@@ -33,7 +33,7 @@
         (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
       pop_datamap[fips_3digits] = pueblo.population;
     });
-    var pop_map = new PRMap({node: node, tiles: 'pueblos', on_ready: function(){
+    var pop_map = new PRMap({node: node, size: "large", tiles: 'pueblos', on_ready: function(){
       pop_map.encode_quan(pop_datamap);
     }});
     node = document.getElementById("partidos-map");
@@ -44,7 +44,7 @@
         (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
       party_datamap[fips_3digits] = pueblo.party;
     });
-    var party_map = new PRMap({node: node, tiles: 'pueblos', on_ready: function(){
+    var party_map = new PRMap({node: node, size: "large",tiles: 'pueblos', on_ready: function(){
       party_map.encode_qual(party_datamap, {"PPD": "#ff0000", "PNP": "#0000ff"});
     }});
   });

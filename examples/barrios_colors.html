@@ -45,7 +45,7 @@
       	des_datamap[barrio.geo_id] = barrio.foreign;
       }
     });
-    var des_map = new PRMap({node: node, tiles: 'barrios', on_ready: function(){
+    var des_map = new PRMap({node: node, size: "large", tiles: 'barrios', on_ready: function(){
       des_map.encode_quan(des_datamap);
     }});
 
@@ -57,7 +57,7 @@
       	pob_datamap[barrio.geo_id] = barrio.below_poverty;
       }
     });
-    var pop_map = new PRMap({node: node, tiles: 'barrios', on_ready: function(){
+    var pop_map = new PRMap({node: node, tiles: 'barrios', size: "large", on_ready: function(){
       pop_map.encode_quan(pob_datamap);
     }});
   });

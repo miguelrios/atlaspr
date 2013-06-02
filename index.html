@@ -1,22 +1,83 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-  .q0-9 { fill:rgb(247,251,255); }
-  .q1-9 { fill:rgb(222,235,247); }
-  .q2-9 { fill:rgb(198,219,239); }
-  .q3-9 { fill:rgb(158,202,225); }
-  .q4-9 { fill:rgb(107,174,214); }
-  .q5-9 { fill:rgb(66,146,198); }
-  .q6-9 { fill:rgb(33,113,181); }
-  .q7-9 { fill:rgb(8,81,156); }
-  .q8-9 { fill:rgb(8,48,107); }
+  body{
+    font-family: 'PT Sans', sans-serif;
+    font-weight: 400;
+    color: #333;
+  }
+  #title{
+    font-size: 72px;
+    font-weight: 400;
+    margin:0 0 10px 25px;
+  }
+  #title small{
+    font-size: 18px;
+  }
+  #map{
+
+  }
+  #barrio{
+    font-weight:bold;
+    text-align: left;
+    margin-left: 25px;
+    opacity: 0.25;
+  }
+  #pueblo{
+    position: fixed;
+    bottom:0px;
+    right: 10px;
+    font-size:72px;
+    text-align: right;
+    opacity: 0.25;
+    margin:0;
+  }
+  #menu{
+    margin-left: 25px;
+  }
+  a, a:visited{
+    color: #637939;
+  }
+  a:hover{
+    color: #333;
+  }
 </style>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 <script src="../../js/lib/d3.js"></script>
 <script src="../js/lib/klass.js"></script>
 <script src="../js/prmap.js"></script>
 <body>
-<div id = 'map'></div>
-<script type = 'text/javascript'>
-  var node = document.getElementById("map");
-  var map = new PRMap({node: node, tiles: ['barrios','pueblos']});
-</script>
+  <h1 id = 'title'>Atlas PR <small>Free, open, interactive and detailed maps of Puerto Rico for your web applications.</small></h1>
+  <div id = 'map'></div>
+  <p id = 'barrio'></p>
+  <div id = 'menu'><a href = 'examples.html'>Examples</a> | <a href = 'docs.html'>Documentation</a> | <a href = 'https://github.com/miguelrios/prmap'>Source code</a></div>
+  <p id = 'pueblo'></p>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("map");
+    var color = d3.scale.category20b();
+    var ready = function ready(map){
+      map['pueblos'].style("fill", function(){
+        var index = Math.round(Math.random()*20);
+        return color(index);
+      });
+      map['pueblos'].style("fill-opacity", 0.5);
+      var index = 0;
+      var interval = setInterval(function(){
+        var random_tile = map['barrios'][0][index++];
+        var tile = d3.select(random_tile).style("fill", color(10));
+        d3.select("#barrio").text(tile.attr("data-name"));
+        if(index >= map['barrios'][0].length){
+          clearInterval(interval);
+        }
+      },100);
+    }
+
+    var hover = function hover(info, path){
+      d3.select("#pueblo").text(info.properties.NAME);
+    };
+    var map = new PRMap({node: node, size: "large" ,tiles: ["isla",'barrios','pueblos'], on_ready: ready,
+      events: {
+        on_mouseover: hover
+      }
+    });
+  </script>

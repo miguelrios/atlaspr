@@ -4,24 +4,31 @@
 <script src="../js/lib/klass.js"></script>
 <script src="../js/prmap.js"></script>
 <body>
+<h3>Isla</h3>
+<div id = 'isla-map'>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("isla-map");
+    var map = new PRMap({node: node, size: "large", tiles: 'isla'});
+  </script>
+</div>
 <h3>Pueblos</h3>
 <div id = 'pueblos-map'>
 	<script type = 'text/javascript'>
 	  var node = document.getElementById("pueblos-map");
-	  var map = new PRMap({node: node, tiles: 'pueblos'});
+	  var map = new PRMap({node: node, tiles: 'pueblos', size: "large"});
 	</script>
 </div>
 <h3>Barrios</h3>
 <div id = 'barrios-map'>
   <script type = 'text/javascript'>
     var node = document.getElementById("barrios-map");
-    var map = new PRMap({node: node, tiles: 'barrios'});
+    var map = new PRMap({node: node, size: "large", tiles: 'barrios'});
   </script>
 </div>
-<h3>Ambos</h3>
+<h3>Todos</h3>
 <div id = 'ambos-map'>
   <script type = 'text/javascript'>
     var node = document.getElementById("ambos-map");
-    var map = new PRMap({node: node, tiles: ['barrios','pueblos']});
+    var map = new PRMap({node: node, size: "large", tiles: ['barrios','pueblos', 'isla']});
   </script>
 </div>

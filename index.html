@@ -4,6 +4,12 @@
 <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.1.6/d3.min.js"></script>
 <script src="./js/lib/klass.js"></script>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+<!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" />
+<![endif]-->
+
+<script src="./js/lib/leaflet.js"></script>
 <script src="./js/atlaspr.js"></script>
 <body>
   <a href = './'>
@@ -30,13 +36,14 @@
         if(index >= map['barrios'][0].length){
           clearInterval(interval);
         }
+        atlas.zoom(1.1);
       },100);
     }
 
     var hover = function hover(info, path){
       d3.select("#pueblo").text(info.properties.NAME);
     };
-    var map = new AtlasPR({node: node, size: "large" ,tiles: ["isla",'barrios','pueblos'], on_ready: ready,
+    var atlas = new AtlasPR({node: node, size: "large" ,tiles: ["isla",'barrios','pueblos'], on_ready: ready,
       events: {
         on_mouseover: hover
       }

@@ -5,6 +5,8 @@ var AtlasPR = klass(function (options) {
   this.options.events = options.events || {};
   this.path = "../geotiles/puertorico-geo.json";
   this.maps = {};
+  this.map_type = this.options.map_type || "simple";
+  this.center = [-66.251367,18.20033];
   this.meta_attributes = {
     "barrios": {
       width: 1,
@@ -44,27 +46,42 @@ var AtlasPR = klass(function (options) {
 .methods({
 	draw: function () {
     var self = this;
-    
-    var color_scale = d3.scale.category20b();
-    var svg = d3.select(this.options.node).append("svg")
-      .attr("width", this.width)
-      .attr("height", this.height);
+    d3.select(this.options.node)
+      .style("width", this.width + "px")
+      .style("height", this.height + "px");
 
-    var projection = d3.geo.mercator()
-      .scale(this.scale)
-      .center([-66.251367,18.20033])
-      .translate([this.width/2,this.height/2])
-      // .translate([width / 2, height / 2]);
+    if(this.map_type == 'multilayer'){
+      this.leaflet_map = new L.Map(this.options.node, {
+            center: this.center.reverse(),
+            zoom: 9
+          })
+          // get your own api key at cloudmade.com
+          .addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/3a2a10a1869e40c7b80e1ebd2d53696c/97799/256/{z}/{x}/{y}.png"));
+    
+      this.project_fn = function project(x) {
+        var point = self.leaflet_map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
+        return [point.x, point.y];
+      }
+      var svg = d3.select(self.leaflet_map.getPanes().overlayPane).append("svg").attr("class", "parent"),
+        container = svg.append("g").attr("class", "leaflet-zoom-hide container");
+    } else{
+      this.project_fn = d3.geo.mercator()
+        .scale(this.scale)
+        .center([-66.251367,18.20033])
+        .translate([this.width/2,this.height/2]);
+      var container = d3.select(this.options.node).append("svg");
+    } 
+    var color_scale = d3.scale.category20b();
 
     d3.json(self.path, function(error, data) {
       // zoom to island
-      var path = d3.geo.path()
-        .projection(projection);
+      var path = d3.geo.path().projection(self.project_fn),
+        bounds = d3.geo.bounds(data.isla);
 
       self.tiles.forEach(function(tile){
         var width = self.meta_attributes[tile].width;
         var tiletype = self.meta_attributes[tile].id;
-        self.maps[tile] = svg.selectAll("." + tile)
+        self.maps[tile] = container.selectAll("." + tile)
           .data(data[tile].features)
           .enter()
             .append("path")  
@@ -74,6 +91,7 @@ var AtlasPR = klass(function (options) {
               .attr("data-name",function(d){return d.properties.NAME})
               .style("stroke-width", width)
               .style("fill", "rgba(255,255,255,0)")
+              .style("fill-opacity", self.map_type == "simple" ? 1 : 0.66)
               .style("stroke", "#333")
               .on("click",self.options.events.on_click)
               .on("mouseover", function(d){
@@ -85,6 +103,27 @@ var AtlasPR = klass(function (options) {
                 self.options.events.on_mouseout && self.options.events.on_mouseout(d,this);
               });
       });
+      if(self.map_type == 'multilayer'){
+        self.leaflet_map.on("viewreset", reset);
+        reset();
+        function reset(){
+          var bottomLeft = self.project_fn(bounds[0]),
+              topRight = self.project_fn(bounds[1]);
+
+          svg.attr("width", topRight[0] - bottomLeft[0])
+              .attr("height", bottomLeft[1] - topRight[1])
+              .style("margin-left", bottomLeft[0] + "px")
+              .style("margin-top", topRight[1] + "px");
+
+          container.attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+
+          self.tiles.forEach(function(tile){
+            self.maps[tile].attr("d", path);
+          });
+        }
+      }
+
+      // optional callback
       if(self.options.on_ready){
         self.options.on_ready(self.maps);
       }
@@ -116,5 +155,11 @@ var AtlasPR = klass(function (options) {
         var id = d.properties[d3.select(this).attr("data-tiletype")];
         return quantize(+datamap[id]) || "grey";
       });
+  },
+  zoom: function(multiplier){
+    
+  },
+  get_leaflet_map: function(){
+    return this.leaflet_map;
   }
 })

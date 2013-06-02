@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../css/atlaspr.css">
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.1.6/d3.min.js"></script>
+<script src="../js/lib/klass.js"></script>
+<script src="../js/atlaspr.js"></script>
+<body>
+  <a href = '/'>
+    <h1 id = 'title'>Atlas PR<small>Free, open, interactive, detailed maps of Puerto Rico for your web applications.</small></h1>
+  </a>
+  <div id = 'map'></div>
+  <p id = 'barrio'></p>
+  <div id = 'menu'><a href = 'examples/index.html'>Examples</a> | <a href = 'docs.html'>Documentation</a> | <a href = 'https://github.com/miguelrios/atlaspr'>Source code</a></div>
+  <p id = 'pueblo'></p>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("map");
+    var color = d3.scale.category20b();
+    var ready = function ready(map){
+      map['pueblos'].style("fill", function(){
+        var index = Math.round(Math.random()*20);
+        return color(index);
+      });
+      map['pueblos'].style("fill-opacity", 0.5);
+      var index = 0;
+      var interval = setInterval(function(){
+        var random_tile = map['barrios'][0][index++];
+        var tile = d3.select(random_tile).style("fill", color(10));
+        d3.select("#barrio").text(tile.attr("data-name"));
+        if(index >= map['barrios'][0].length){
+          clearInterval(interval);
+        }
+      },100);
+    }
+
+    var hover = function hover(info, path){
+      d3.select("#pueblo").text(info.properties.NAME);
+    };
+    var map = new AtlasPR({node: node, size: "large" ,tiles: ["isla",'barrios','pueblos'], on_ready: ready,
+      events: {
+        on_mouseover: hover
+      }
+    });
+  </script>
+<a href="https://github.com/miguelrios/atlaspr"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>

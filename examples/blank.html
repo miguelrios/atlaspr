@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<script src="../js/lib/d3.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/atlaspr.css">
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+<script src="../../js/lib/d3.js"></script>
 <script src="../js/lib/klass.js"></script>
 <script src="../js/prmap.js"></script>
 <body>
-<h3>Isla</h3>
+  <a href = '/'><h1 id = 'title'>Atlas PR <small>Free, open, interactive and detailed maps of Puerto Rico for your web applications.</
+  <h2>Examples<small>Blank maps (<a href = "https://github.com/miguelrios/atlaspr/blob/master/examples/blank.html">source code</a>)</small></h2>
+  <h3>Isla</h3>
 <div id = 'isla-map'>
   <script type = 'text/javascript'>
     var node = document.getElementById("isla-map");
@@ -13,10 +17,10 @@
 </div>
 <h3>Pueblos</h3>
 <div id = 'pueblos-map'>
-	<script type = 'text/javascript'>
-	  var node = document.getElementById("pueblos-map");
-	  var map = new PRMap({node: node, tiles: 'pueblos', size: "large"});
-	</script>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("pueblos-map");
+    var map = new PRMap({node: node, tiles: 'pueblos', size: "large"});
+  </script>
 </div>
 <h3>Barrios</h3>
 <div id = 'barrios-map'>

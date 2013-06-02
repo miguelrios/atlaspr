@@ -1,56 +1,15 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style>
-  body{
-    font-family: 'PT Sans', sans-serif;
-    font-weight: 400;
-    color: #333;
-  }
-  #title{
-    font-size: 72px;
-    font-weight: 400;
-    margin:0 0 10px 25px;
-  }
-  #title small{
-    font-size: 18px;
-  }
-  #map{
-
-  }
-  #barrio{
-    font-weight:bold;
-    text-align: left;
-    margin-left: 25px;
-    opacity: 0.25;
-  }
-  #pueblo{
-    position: fixed;
-    bottom:0px;
-    right: 10px;
-    font-size:72px;
-    text-align: right;
-    opacity: 0.25;
-    margin:0;
-  }
-  #menu{
-    margin-left: 25px;
-  }
-  a, a:visited{
-    color: #637939;
-  }
-  a:hover{
-    color: #333;
-  }
-</style>
+<link rel="stylesheet" type="text/css" href="../css/atlaspr.css">
 <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 <script src="../../js/lib/d3.js"></script>
 <script src="../js/lib/klass.js"></script>
 <script src="../js/prmap.js"></script>
 <body>
-  <h1 id = 'title'>Atlas PR <small>Free, open, interactive and detailed maps of Puerto Rico for your web applications.</small></h1>
+  <a href = '/'><h1 id = 'title'>Atlas PR <small>Free, open, interactive and detailed maps of Puerto Rico for your web applications.</
   <div id = 'map'></div>
   <p id = 'barrio'></p>
-  <div id = 'menu'><a href = 'examples.html'>Examples</a> | <a href = 'docs.html'>Documentation</a> | <a href = 'https://github.com/miguelrios/prmap'>Source code</a></div>
+  <div id = 'menu'><a href = 'examples/index.html'>Examples</a> | <a href = 'docs.html'>Documentation</a> | <a href = 'https://github.com/miguelrios/atlaspr'>Source code</a></div>
   <p id = 'pueblo'></p>
   <script type = 'text/javascript'>
     var node = document.getElementById("map");

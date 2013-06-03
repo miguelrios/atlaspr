@@ -1,14 +1,16 @@
 var AtlasPR = klass(function (options) {
-  this.options = options;
+  this.options = options;  
   this.tiles = Array.isArray(options.tiles) ? options.tiles : [options.tiles || 'isla'];
   this.main_tile = this.tiles[0];
   this.options.events = options.events || {};
-  this.path = "../geotiles/puertorico-geo.json";
+  this.geotiles_path = "../geotiles/PATHGEN.json";
+  this.center_ll = [-66.251367,18.20033];
+  this.colors = d3.scale.category20c();
   this.maps = {};
   this.meta_attributes = {
     "barrios": {
       width: 1,
-      id: "GEO_ID"
+      id: "COUSUB"
     },
     "pueblos": {
       width: 2,
@@ -16,62 +18,73 @@ var AtlasPR = klass(function (options) {
     },
     "isla":{
       width: 3,
-      id: "GEOID"
+      id: "STATE"
     }
   };
   this.size_attributes = {
     "small": {
       width: 480,
-      height: 160,
-      scale: 23000
     },
     "medium": {
-      width: 960,
-      height: 320,
-      scale: 23000
+      width: 960
     },
     "large": {
-      width: 1200,
-      height: 400,
-      scale: 23000
+      width: 1200
+    },
+    "xlarge": {
+      width: 2400
     }
   };
   this.width = this.size_attributes[this.options.size || "medium"].width;
   this.height = this.width/3;
-  this.scale = this.width*27;
+  this.original_scale = this.width*27;
   this.draw();
 })
 .methods({
-	draw: function () {
+  draw: function () {
     var self = this;
     
     var color_scale = d3.scale.category20b();
-    var svg = d3.select(this.options.node).append("svg")
+    self.svg = d3.select(this.options.node).append("svg")
       .attr("width", this.width)
-      .attr("height", this.height);
+      .attr("height", this.height)
+      .call(d3.behavior.zoom().on("zoom", this.options.zoom && redraw));
 
-    var projection = d3.geo.mercator()
-      .scale(this.scale)
-      .center([-66.251367,18.20033])
-      .translate([this.width/2,this.height/2])
+    self.projection = d3.geo.mercator()
+      .scale(self.original_scale)
+      .center(self.center_ll)
+      .translate([this.width/2,this.height/2]);
+
+    self.translation = self.projection.translate(); // the projection's default translation
+    self.scale = self.projection.scale(); // the projection's default translation
       // .translate([width / 2, height / 2]);
+    self.path_fn = d3.geo.path()
+        .projection(self.projection);
 
-    d3.json(self.path, function(error, data) {
+    d3.json(self.geotiles_path.replace("PATHGEN", self.tiles.sort().join("+")), function(error, data) {
       // zoom to island
-      var path = d3.geo.path()
-        .projection(projection);
+      self.data = data;
+      self.indexed_data = {};
 
       self.tiles.forEach(function(tile){
         var width = self.meta_attributes[tile].width;
         var tiletype = self.meta_attributes[tile].id;
-        self.maps[tile] = svg.selectAll("." + tile)
+        self.indexed_data[tile] = {};
+
+        self.maps[tile] = self.svg.selectAll("." + tile)
           .data(data[tile].features)
           .enter()
             .append("path")  
-              .attr("d", path)
+              .attr("d", self.path_fn)
               .attr("class", tile)
               .attr("data-tiletype",tiletype)
-              .attr("data-name",function(d){return d.properties.NAME})
+              .attr("data-name",function(d){
+                var id = d.properties[self.meta_attributes[tile].id];
+                self.indexed_data[tile][id] = d;
+                if(d.properties.NAME){
+                  self.indexed_data[tile][d.properties.NAME.toLowerCase()] = d;
+                }
+                return d.properties.NAME})
               .style("stroke-width", width)
               .style("fill", "rgba(255,255,255,0)")
               .style("stroke", "#333")
@@ -85,10 +98,37 @@ var AtlasPR = klass(function (options) {
                 self.options.events.on_mouseout && self.options.events.on_mouseout(d,this);
               });
       });
+
       if(self.options.on_ready){
-        self.options.on_ready(self.maps);
+        self.options.on_ready(self);
       }
     });
+    function redraw() {
+      // d3.event.translate (an array) stores the current translation from the parent SVG element
+      // t (an array) stores the projection's default translation
+      // we add the x and y vales in each array to determine the projection's new translation
+      var tx = self.translation[0] * d3.event.scale + d3.event.translate[0];
+      var ty = self.translation[1] * d3.event.scale + d3.event.translate[1];
+      self.projection.translate([tx, ty]);
+
+      // now we determine the projection's new scale, but there's a problem:
+      // the map doesn't 'zoom onto the mouse point'
+      self.projection.scale(self.scale * d3.event.scale);
+      self.svg.selectAll("path").attr("d", self.path_fn);
+    }
+  },
+  add_markers: function(markers_list){
+    var self = this;
+    self.svg.selectAll("svg")
+      .data(markers_list)
+      .enter()
+        .append("svg:circle")
+        .attr("r", 4.5)
+        .attr("cx", function(d){return self.projection(d.center)[0]})
+        .attr("cy", function(d){return self.projection(d.center)[1]})
+        .style("fill", self.colors(0))
+        .style("stroke-width", 2)
+        .style("stroke", "#333");
   },
   encode_qual: function(datamap, colormap){
     this.maps[this.main_tile]
@@ -113,8 +153,68 @@ var AtlasPR = klass(function (options) {
     this.maps[this.main_tile]
       .style("fill", undefined)
       .attr("class", function(d){
+        console.log(d3.select(this).attr("data-tiletype"))
         var id = d.properties[d3.select(this).attr("data-tiletype")];
         return quantize(+datamap[id]) || "grey";
       });
+  },
+  zoom_to_pueblo: function(geo_id, callback){
+    var self = this;
+    // reset map
+    self.projection
+      .scale(self.original_scale)
+      .center(self.center_ll)
+      .translate([this.width/2,this.height/2]);
+    var pueblo = self.indexed_data.pueblos[geo_id.toLowerCase()];
+    var old_bounds = self.path_fn.bounds(pueblo);
+    var pueblo_name = pueblo.properties.NAME; 
+    var pueblo_width = Math.abs(old_bounds[1][0] - old_bounds[0][0]);
+    var pueblo_height = Math.abs(old_bounds[1][1] - old_bounds[0][1]);
+    var scalar = 1;
+    if(pueblo_height/self.height >= pueblo_width/self.width){
+      scalar = self.height/pueblo_height;
+    } else{
+      scalar = self.width/pueblo_width;
+    }
+    self.projection.scale(self.projection.scale()*scalar*0.95);
+    var bounds = self.path_fn.bounds(pueblo);
+    var center_x = (bounds[1][0] + bounds[0][0])/2;
+    var center_y = (bounds[1][1] + bounds[0][1])/2;
+    var center = [self.width - center_x, self.height-center_y];
+    self.projection.translate(center);
+    self.translation = self.projection.translate();
+    self.scale = self.projection.scale();
+    self.svg.selectAll("path")
+      .transition()          
+        .duration(3000)
+        .attr("d", self.path_fn)
+        .each("end", function(d){
+          if(d.properties.NAME == pueblo.properties.NAME && d.properties.COUSUB == pueblo.properties.COUSUB && callback){
+            callback(d,this);
+          }
+        });
+  },
+  _zoom_to_random_pueblo: function(callback){
+    var p = this.data.pueblos.features[Math.round(Math.random()*(this.data.pueblos.features.length - 1))];
+    this.zoom_to_pueblo(p.properties.COUNTY, callback);
+    return p;
+  },
+
+  zoom_to_original: function(callback){
+    var self = this;
+    self.projection
+      .scale(self.original_scale)
+      .center(self.center_ll)
+      .translate([this.width/2,this.height/2]);
+    self.svg.selectAll("path")
+      .transition()          
+        .duration(2000)
+        .attr("d", self.path_fn);
+  },
+  get_barrios_mapping: function(){
+
+  },
+  get_pueblos_mapping: function(){
+
   }
 })

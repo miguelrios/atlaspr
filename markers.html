@@ -20,7 +20,7 @@
         var centroid = d3.geo.centroid(pueblo);
         centroids.push({center: centroid, text: pueblo.properties.NAME});
       });
-      map.add_markers(centroids); 
+      atlas.add_markers(centroids); 
     }});
   </script>
 </div>

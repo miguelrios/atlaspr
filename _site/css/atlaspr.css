@@ -1,0 +1,72 @@
+ .q0-9 { fill:rgb(247,251,255); }
+  .q1-9 { fill:rgb(222,235,247); }
+  .q2-9 { fill:rgb(198,219,239); }
+  .q3-9 { fill:rgb(158,202,225); }
+  .q4-9 { fill:rgb(107,174,214); }
+  .q5-9 { fill:rgb(66,146,198); }
+  .q6-9 { fill:rgb(33,113,181); }
+  .q7-9 { fill:rgb(8,81,156); }
+  .q8-9 { fill:rgb(8,48,107); }
+  .grey { fill:rgb(200,200,200); }
+  body{
+    font-family: 'PT Sans', sans-serif;
+    font-weight: 400;
+    color: #333;
+    font-size: 18px;
+  }
+  #title{
+    font-size: 72px;
+    font-weight: 400;
+    margin:0 0 10px 25px;
+    color: #222;
+  }
+  h1 small,h2 small{
+    font-size: 18px;
+  }
+  h1 small{
+    margin-left: 5px;
+  }
+  h2 small{
+    margin-left: 10px;
+  }
+  #map{
+
+  }
+  #barrio{
+    font-weight:bold;
+    text-align: left;
+    margin-left: 25px;
+    opacity: 0.25;
+  }
+  #pueblo{
+    position: fixed;
+    bottom:0px;
+    right: 10px;
+    font-size:72px;
+    text-align: right;
+    opacity: 0.25;
+    margin:0;
+  }
+  #menu{
+    margin-left: 25px;
+  }
+  a, a:visited{
+    color: #637939;
+    text-decoration: none;
+  }
+  a:hover{
+    color: #333;
+  }
+  .example{
+    margin-left: 25px;
+  }
+  h2{
+    margin: 0 0 0 25px;
+    font-weight: 400;
+    font-size: 36px;
+  }
+  h3{
+    margin: 20px 0 0 50px;
+    font-size: 24px;
+    font-weight: 400;
+  }

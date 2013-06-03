@@ -21,7 +21,7 @@
 <div id = 'pueblos' class = 'example'>
   <script type = 'text/javascript'>
     var pueblosnode = document.getElementById("pueblos");
-    d3.json("../data/munidata.json", function(data){
+    d3.json("data/munidata.json", function(data){
       var party_datamap = {};
       data.forEach(function(pueblo){
         var fips_3digits = pueblo.fips.length == 1 ? ("00" + pueblo.fips) : 
@@ -38,7 +38,7 @@
 <div id = 'barrios' class = 'example'>
   <script type = 'text/javascript'>
     var barrios = document.getElementById("barrios");
-    d3.json("../data/barriosdata.json", function(data){
+    d3.json("data/barriosdata.json", function(data){
       var pob_datamap = {};
       data.forEach(function(barrio){
         if(barrio.below_poverty != null){

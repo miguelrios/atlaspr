@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>  | AtlasPR</title>
+<link rel="stylesheet" type="text/css" href="./css/atlaspr.css">
+<link rel="stylesheet" type="text/css" href="./css/syntax.css">
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+<script src="./js/lib/d3.js"></script>
+<script src="./js/lib/klass.js"></script>
+<script src="./js/atlaspr.js"></script>
+<body>
+  <a href = './'>
+    <h1 id = 'title'>Atlas PR<small>Free, open, interactive, detailed maps of Puerto Rico for your web applications.</small></h1>
+  </a>
+      <h2>Examples<small>Barrios maps (<a href = "https://github.com/miguelrios/atlaspr/blob/master/examples/barrios.html">source code</a>)</small></h2>
+  <h3>Barrios - % of families under poverty level</h3>
+  <div id = 'pobreza-map'>
+  </div>
+
+<script type = 'text/javascript'>
+  var node = document.getElementById("pobreza-map");
+  d3.json("data/barriosdata.json", function(data){
+    var pob_datamap = {};
+    data.forEach(function(barrio){
+      if(barrio.below_poverty != null){
+        // get tile id from metadata GEO_ID, last 5 chars from 19.
+        pob_datamap[barrio.geo_id.substring(14)] = barrio.below_poverty;
+      }
+    });
+    var pop_map = new AtlasPR({node: node, tiles: 'barrios', size: "large", on_ready: function(){
+      // this needs to be called after drawing the map.
+      pop_map.encode_quan(pob_datamap);
+    }});
+  });
+</script>
+<div id = "code">
+<div class="highlight"><pre><code class="js"><span class="lineno"> 1</span> <span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;pobreza-map&quot;</span><span class="p">);</span>
+<span class="lineno"> 2</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="s2">&quot;data/barriosdata.json&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+<span class="lineno"> 3</span>   <span class="kd">var</span> <span class="nx">pob_datamap</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="lineno"> 4</span>   <span class="nx">data</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">barrio</span><span class="p">){</span>
+<span class="lineno"> 5</span>     <span class="k">if</span><span class="p">(</span><span class="nx">barrio</span><span class="p">.</span><span class="nx">below_poverty</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">){</span>
+<span class="lineno"> 6</span>       <span class="c1">// get tile id from metadata GEO_ID, last 5 chars from 19.</span>
+<span class="lineno"> 7</span>       <span class="nx">pob_datamap</span><span class="p">[</span><span class="nx">barrio</span><span class="p">.</span><span class="nx">geo_id</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">14</span><span class="p">)]</span> <span class="o">=</span> <span class="nx">barrio</span><span class="p">.</span><span class="nx">below_poverty</span><span class="p">;</span>
+<span class="lineno"> 8</span>     <span class="p">}</span>
+<span class="lineno"> 9</span>   <span class="p">});</span>
+<span class="lineno">10</span>   <span class="kd">var</span> <span class="nx">pop_map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AtlasPR</span><span class="p">({</span><span class="nx">node</span><span class="o">:</span> <span class="nx">node</span><span class="p">,</span> <span class="nx">tiles</span><span class="o">:</span> <span class="s1">&#39;barrios&#39;</span><span class="p">,</span> <span class="nx">size</span><span class="o">:</span> <span class="s2">&quot;large&quot;</span><span class="p">,</span> <span class="nx">on_ready</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+<span class="lineno">11</span>     <span class="c1">// this needs to be called after drawing the map.</span>
+<span class="lineno">12</span>     <span class="nx">pop_map</span><span class="p">.</span><span class="nx">encode_quan</span><span class="p">(</span><span class="nx">pob_datamap</span><span class="p">);</span>
+<span class="lineno">13</span>   <span class="p">}});</span>
+<span class="lineno">14</span> <span class="p">});</span>
+</code></pre></div>
+</div>
+<div id = 'menu'><a href = './examples.html'>Examples</a> | <a href = '#'>Documentation</a> | <a href = 'https://github.com/miguelrios/atlaspr'>Source code</a></div>
+<a href="https://github.com/miguelrios/atlaspr"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>  | AtlasPR</title>
+<link rel="stylesheet" type="text/css" href="./css/atlaspr.css">
+<link rel="stylesheet" type="text/css" href="./css/syntax.css">
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+<script src="./js/lib/d3.js"></script>
+<script src="./js/lib/klass.js"></script>
+<script src="./js/atlaspr.js"></script>
+<body>
+  <a href = './'>
+    <h1 id = 'title'>Atlas PR<small>Free, open, interactive, detailed maps of Puerto Rico for your web applications.</small></h1>
+  </a>
+  <h3>Pueblos - Población en el 2012</h3>
+<div id = 'poblacion-map'>
+</div>
+<script type = 'text/javascript'>
+  var node = document.getElementById("poblacion-map");
+  d3.json("data/munidata.json", function(data){
+    var pop_datamap = {};
+    //use FIPS code as key
+    data.forEach(function(pueblo){
+      //get id of pueblo with leading 0s.
+      var fips_3digits = pueblo.fips.length == 1 ? ("00" + pueblo.fips) : 
+        (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
+      pop_datamap[fips_3digits] = pueblo.population;
+    });
+    var pop_map = new AtlasPR({node: node, size: "large", tiles: 'pueblos', on_ready: function(){
+      pop_map.encode_quan(pop_datamap);
+    }});
+  });
+</script>
+<div id = "code">
+<div class="highlight"><pre><code class="js"><span class="lineno"> 1</span> <span class="c1">// change the argument to match your id</span>
+<span class="lineno"> 2</span> <span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;poblacion-map&quot;</span><span class="p">);</span>
+<span class="lineno"> 3</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="s2">&quot;data/munidata.json&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+<span class="lineno"> 4</span>   <span class="kd">var</span> <span class="nx">pop_datamap</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="lineno"> 5</span>   <span class="c1">//use FIPS code as key</span>
+<span class="lineno"> 6</span>   <span class="nx">data</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">pueblo</span><span class="p">){</span>
+<span class="lineno"> 7</span>     <span class="c1">//get id of pueblo with leading 0s.</span>
+<span class="lineno"> 8</span>     <span class="kd">var</span> <span class="nx">fips_3digits</span> <span class="o">=</span> <span class="nx">pueblo</span><span class="p">.</span><span class="nx">fips</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="p">(</span><span class="s2">&quot;00&quot;</span> <span class="o">+</span> <span class="nx">pueblo</span><span class="p">.</span><span class="nx">fips</span><span class="p">)</span> <span class="o">:</span> 
+<span class="lineno"> 9</span>       <span class="p">(</span><span class="nx">pueblo</span><span class="p">.</span><span class="nx">fips</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">?</span> <span class="p">(</span><span class="s2">&quot;0&quot;</span> <span class="o">+</span> <span class="nx">pueblo</span><span class="p">.</span><span class="nx">fips</span><span class="p">)</span> <span class="o">:</span> <span class="nx">pueblo</span><span class="p">.</span><span class="nx">fips</span><span class="p">);</span>
+<span class="lineno">10</span>     <span class="nx">pop_datamap</span><span class="p">[</span><span class="nx">fips_3digits</span><span class="p">]</span> <span class="o">=</span> <span class="nx">pueblo</span><span class="p">.</span><span class="nx">population</span><span class="p">;</span>
+<span class="lineno">11</span>   <span class="p">});</span>
+<span class="lineno">12</span>   <span class="kd">var</span> <span class="nx">pop_map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AtlasPR</span><span class="p">({</span><span class="nx">node</span><span class="o">:</span> <span class="nx">node</span><span class="p">,</span> <span class="nx">size</span><span class="o">:</span> <span class="s2">&quot;large&quot;</span><span class="p">,</span> <span class="nx">tiles</span><span class="o">:</span> <span class="s1">&#39;pueblos&#39;</span><span class="p">,</span> <span class="nx">on_ready</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+<span class="lineno">13</span>     <span class="c1">// paint after drawing async.</span>
+<span class="lineno">14</span>     <span class="nx">pop_map</span><span class="p">.</span><span class="nx">encode_quan</span><span class="p">(</span><span class="nx">pop_datamap</span><span class="p">);</span>
+<span class="lineno">15</span>   <span class="p">}});</span>
+<span class="lineno">16</span> <span class="p">});</span>
+</code></pre></div>
+</div>
+<div id = 'menu'><a href = './examples.html'>Examples</a> | <a href = '#'>Documentation</a> | <a href = 'https://github.com/miguelrios/atlaspr'>Source code</a></div>
+<a href="https://github.com/miguelrios/atlaspr"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>

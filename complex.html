@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>  | AtlasPR</title>
+<link rel="stylesheet" type="text/css" href="./css/atlaspr.css">
+<link rel="stylesheet" type="text/css" href="./css/syntax.css">
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+<script src="./js/lib/d3.js"></script>
+<script src="./js/lib/klass.js"></script>
+<script src="./js/atlaspr.js"></script>
+<body>
+  <a href = './'>
+    <h1 id = 'title'>Atlas PR<small>Free, open, interactive, detailed maps of Puerto Rico for your web applications.</small></h1>
+  </a>
+  <h3>Complex example with multiple options and method calls..</h3>
+  <div id = 'map'></div>
+  <p id = 'barrio'></p>
+  <p id = 'pueblo'></p>
+  <script type = 'text/javascript'>
+    // change the id for your node id.
+    var node = document.getElementById("map");
+    // get color scale
+    var color = d3.scale.category20b();
+    //whenever the map is ready, paint the pueblos with random colors.
+    var ready = function ready(atlas){
+      atlas.maps['pueblos'].style("fill", function(){
+        var index = Math.round(Math.random()*20);
+        return color(index);
+      });
+      atlas.maps['pueblos'].style("fill-opacity", 0.5);
+      var index = 0;
+      // three times, select a random pueblo, zoom the map into it.
+      var first_animation = function first_animation(){
+        index++;
+        if(index <= 3){
+          //"atlas" is the main object for atlaspr, it has the api.
+          //'_zoom_to_random_pueblo' is a non documented method that zooms to a pueblo.
+          var pueblo = atlas._zoom_to_random_pueblo(function(info, tile){
+            d3.select(tile).style("fill", "red");
+            //add the text to the bottom right corner.
+            d3.select("#pueblo").text(pueblo.properties.NAME);
+          });
+        } else{
+          //after three zooms, stop the animation, zoom the map back and start the second anim.
+          clearInterval(interval);
+          atlas.zoom_to_original();
+          d3.select("#pueblo").text("");
+          index = 0;
+          interval = setInterval(second_animation,100);
+        }
+      }
+      //the second animation selects a random barrio and paints it, until there are not more barrios.
+      var second_animation = function second_animation(){
+        var random_tile = atlas.maps['barrios'][0][index++];
+        var tile = d3.select(random_tile).style("fill", color(10));
+        d3.select("#barrio").text(tile.attr("data-name"));
+        if(index >= atlas.maps['barrios'][0].length){
+          clearInterval(interval);
+        }
+      }
+      var interval = setInterval(first_animation, 5000);
+    }
+    // display the pueblo name, whenever the map is hovered.
+    var hover = function hover(info, path){
+      d3.select("#pueblo").text(info.properties.NAME);
+    };
+    // magic.
+    new AtlasPR({
+      zoom: true, 
+      node: node, 
+      size: "large" , 
+      tiles: ["isla",'barrios','pueblos'], 
+      on_ready: ready,
+      events: {
+        on_mouseover: hover
+      }
+    });
+  </script>
+  <div id = 'code'>
+<div class="highlight"><pre><code class="js"><span class="lineno"> 1</span> <span class="c1">// change the id for your node id.</span>
+<span class="lineno"> 2</span> <span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;map&quot;</span><span class="p">);</span>
+<span class="lineno"> 3</span> <span class="c1">// get color scale</span>
+<span class="lineno"> 4</span> <span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">category20b</span><span class="p">();</span>
+<span class="lineno"> 5</span> <span class="c1">//whenever the map is ready, paint the pueblos with random colors.</span>
+<span class="lineno"> 6</span> <span class="kd">var</span> <span class="nx">ready</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">ready</span><span class="p">(</span><span class="nx">atlas</span><span class="p">){</span>
+<span class="lineno"> 7</span>   <span class="nx">atlas</span><span class="p">.</span><span class="nx">maps</span><span class="p">[</span><span class="s1">&#39;pueblos&#39;</span><span class="p">].</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;fill&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+<span class="lineno"> 8</span>     <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="o">*</span><span class="mi">20</span><span class="p">);</span>
+<span class="lineno"> 9</span>     <span class="k">return</span> <span class="nx">color</span><span class="p">(</span><span class="nx">index</span><span class="p">);</span>
+<span class="lineno">10</span>   <span class="p">});</span>
+<span class="lineno">11</span>   <span class="nx">atlas</span><span class="p">.</span><span class="nx">maps</span><span class="p">[</span><span class="s1">&#39;pueblos&#39;</span><span class="p">].</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;fill-opacity&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">);</span>
+<span class="lineno">12</span>   <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">13</span>   <span class="c1">// three times, select a random pueblo, zoom the map into it.</span>
+<span class="lineno">14</span>   <span class="kd">var</span> <span class="nx">first_animation</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">first_animation</span><span class="p">(){</span>
+<span class="lineno">15</span>     <span class="nx">index</span><span class="o">++</span><span class="p">;</span>
+<span class="lineno">16</span>     <span class="k">if</span><span class="p">(</span><span class="nx">index</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">){</span>
+<span class="lineno">17</span>       <span class="c1">//&quot;atlas&quot; is the main object for atlaspr, it has the api.</span>
+<span class="lineno">18</span>       <span class="c1">//&#39;_zoom_to_random_pueblo&#39; is a non documented method that zooms to a pueblo.</span>
+<span class="lineno">19</span>       <span class="kd">var</span> <span class="nx">pueblo</span> <span class="o">=</span> <span class="nx">atlas</span><span class="p">.</span><span class="nx">_zoom_to_random_pueblo</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">info</span><span class="p">,</span> <span class="nx">tile</span><span class="p">){</span>
+<span class="lineno">20</span>         <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">tile</span><span class="p">).</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;fill&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">);</span>
+<span class="lineno">21</span>         <span class="c1">//add the text to the bottom right corner.</span>
+<span class="lineno">22</span>         <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#pueblo&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">pueblo</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">NAME</span><span class="p">);</span>
+<span class="lineno">23</span>       <span class="p">});</span>
+<span class="lineno">24</span>     <span class="p">}</span> <span class="k">else</span><span class="p">{</span>
+<span class="lineno">25</span>       <span class="c1">//after three zooms, stop the animation, zoom the map back and start the second anim.</span>
+<span class="lineno">26</span>       <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">interval</span><span class="p">);</span>
+<span class="lineno">27</span>       <span class="nx">atlas</span><span class="p">.</span><span class="nx">zoom_to_original</span><span class="p">();</span>
+<span class="lineno">28</span>       <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#pueblo&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="lineno">29</span>       <span class="nx">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="lineno">30</span>       <span class="nx">interval</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(</span><span class="nx">second_animation</span><span class="p">,</span><span class="mi">100</span><span class="p">);</span>
+<span class="lineno">31</span>     <span class="p">}</span>
+<span class="lineno">32</span>   <span class="p">}</span>
+<span class="lineno">33</span>   <span class="c1">//the second animation selects a random barrio and paints it, until there are not more barrios.</span>
+<span class="lineno">34</span>   <span class="kd">var</span> <span class="nx">second_animation</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">second_animation</span><span class="p">(){</span>
+<span class="lineno">35</span>     <span class="kd">var</span> <span class="nx">random_tile</span> <span class="o">=</span> <span class="nx">atlas</span><span class="p">.</span><span class="nx">maps</span><span class="p">[</span><span class="s1">&#39;barrios&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="nx">index</span><span class="o">++</span><span class="p">];</span>
+<span class="lineno">36</span>     <span class="kd">var</span> <span class="nx">tile</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">random_tile</span><span class="p">).</span><span class="nx">style</span><span class="p">(</span><span class="s2">&quot;fill&quot;</span><span class="p">,</span> <span class="nx">color</span><span class="p">(</span><span class="mi">10</span><span class="p">));</span>
+<span class="lineno">37</span>     <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#barrio&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">tile</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;data-name&quot;</span><span class="p">));</span>
+<span class="lineno">38</span>     <span class="k">if</span><span class="p">(</span><span class="nx">index</span> <span class="o">&gt;=</span> <span class="nx">atlas</span><span class="p">.</span><span class="nx">maps</span><span class="p">[</span><span class="s1">&#39;barrios&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nx">length</span><span class="p">){</span>
+<span class="lineno">39</span>       <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">interval</span><span class="p">);</span>
+<span class="lineno">40</span>     <span class="p">}</span>
+<span class="lineno">41</span>   <span class="p">}</span>
+<span class="lineno">42</span>   <span class="kd">var</span> <span class="nx">interval</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(</span><span class="nx">first_animation</span><span class="p">,</span> <span class="mi">5000</span><span class="p">);</span>
+<span class="lineno">43</span> <span class="p">}</span>
+<span class="lineno">44</span> <span class="c1">// display the pueblo name, whenever the map is hovered.</span>
+<span class="lineno">45</span> <span class="kd">var</span> <span class="nx">hover</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">hover</span><span class="p">(</span><span class="nx">info</span><span class="p">,</span> <span class="nx">path</span><span class="p">){</span>
+<span class="lineno">46</span>   <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="s2">&quot;#pueblo&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">properties</span><span class="p">.</span><span class="nx">NAME</span><span class="p">);</span>
+<span class="lineno">47</span> <span class="p">};</span>
+<span class="lineno">48</span> <span class="c1">// magic.</span>
+<span class="lineno">49</span> <span class="k">new</span> <span class="nx">AtlasPR</span><span class="p">({</span>
+<span class="lineno">50</span>   <span class="nx">zoom</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> 
+<span class="lineno">51</span>   <span class="nx">node</span><span class="o">:</span> <span class="nx">node</span><span class="p">,</span> 
+<span class="lineno">52</span>   <span class="nx">size</span><span class="o">:</span> <span class="s2">&quot;large&quot;</span> <span class="p">,</span> 
+<span class="lineno">53</span>   <span class="nx">tiles</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;isla&quot;</span><span class="p">,</span><span class="s1">&#39;barrios&#39;</span><span class="p">,</span><span class="s1">&#39;pueblos&#39;</span><span class="p">],</span> 
+<span class="lineno">54</span>   <span class="nx">on_ready</span><span class="o">:</span> <span class="nx">ready</span><span class="p">,</span>
+<span class="lineno">55</span>   <span class="nx">events</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">56</span>     <span class="nx">on_mouseover</span><span class="o">:</span> <span class="nx">hover</span>
+<span class="lineno">57</span>   <span class="p">}</span>
+<span class="lineno">58</span> <span class="p">});</span>
+</code></pre></div>
+  </div>
+<div id = 'menu'><a href = './examples.html'>Examples</a> | <a href = '#'>Documentation</a> | <a href = 'https://github.com/miguelrios/atlaspr'>Source code</a></div>
+<a href="https://github.com/miguelrios/atlaspr"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>

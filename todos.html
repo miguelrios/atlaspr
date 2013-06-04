@@ -11,17 +11,17 @@
   <a href = './'>
     <h1 id = 'title'>Atlas PR<small>Free, open, interactive, detailed maps of Puerto Rico for your web applications.</small></h1>
   </a>
-  <h3>Isla</h3>
-<div id = 'pueblos-map'>
+  <h3>All tiles</h3>
+<div id = 'all-map'>
   <script type = 'text/javascript'>
-    var node = document.getElementById("pueblos-map");
-    var map = new AtlasPR({node: node, size: "large", tiles: 'pueblos'});
+    var node = document.getElementById("all-map");
+    var map = new AtlasPR({node: node, size: "large", tiles: ['barrios', 'pueblos','isla']});
   </script>
 </div>
 <div id = "code">
 <div class="highlight"><pre><code class="js"><span class="lineno">1</span> <span class="c1">// change the argument to match your id</span>
-<span class="lineno">2</span> <span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;pueblos-map&quot;</span><span class="p">);</span>
-<span class="lineno">3</span> <span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AtlasPR</span><span class="p">({</span><span class="nx">node</span><span class="o">:</span> <span class="nx">node</span><span class="p">,</span> <span class="nx">size</span><span class="o">:</span> <span class="s2">&quot;large&quot;</span><span class="p">,</span> <span class="nx">tiles</span><span class="o">:</span> <span class="s1">&#39;pueblos&#39;</span><span class="p">});</span>
+<span class="lineno">2</span> <span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;all-map&quot;</span><span class="p">);</span>
+<span class="lineno">3</span> <span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AtlasPR</span><span class="p">({</span><span class="nx">node</span><span class="o">:</span> <span class="nx">node</span><span class="p">,</span> <span class="nx">size</span><span class="o">:</span> <span class="s2">&quot;large&quot;</span><span class="p">,</span> <span class="nx">tiles</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;barrios&#39;</span><span class="p">,</span> <span class="s1">&#39;pueblos&#39;</span><span class="p">,</span><span class="s1">&#39;isla&#39;</span><span class="p">]});</span>
 </code></pre></div>
 </div>
 <div id = 'menu'><a href = './examples.html'>Examples</a> | <a href = '#'>Documentation</a> | <a href = 'https://github.com/miguelrios/atlaspr'>Source code</a></div>

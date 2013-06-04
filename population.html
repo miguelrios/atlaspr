@@ -1,0 +1,42 @@
+---
+layout: default
+---
+<h3>Pueblos - Población en el 2012</h3>
+<div id = 'poblacion-map'>
+</div>
+<script type = 'text/javascript'>
+  var node = document.getElementById("poblacion-map");
+  d3.json("data/munidata.json", function(data){
+    var pop_datamap = {};
+    //use FIPS code as key
+    data.forEach(function(pueblo){
+      //get id of pueblo with leading 0s.
+      var fips_3digits = pueblo.fips.length == 1 ? ("00" + pueblo.fips) : 
+        (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
+      pop_datamap[fips_3digits] = pueblo.population;
+    });
+    var pop_map = new AtlasPR({node: node, size: "large", tiles: 'pueblos', on_ready: function(){
+      pop_map.encode_quan(pop_datamap);
+    }});
+  });
+</script>
+<div id = "code">
+{% highlight js linenos %}
+// change the argument to match your id
+var node = document.getElementById("poblacion-map");
+d3.json("data/munidata.json", function(data){
+  var pop_datamap = {};
+  //use FIPS code as key
+  data.forEach(function(pueblo){
+    //get id of pueblo with leading 0s.
+    var fips_3digits = pueblo.fips.length == 1 ? ("00" + pueblo.fips) : 
+      (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
+    pop_datamap[fips_3digits] = pueblo.population;
+  });
+  var pop_map = new AtlasPR({node: node, size: "large", tiles: 'pueblos', on_ready: function(){
+    // paint after drawing async.
+    pop_map.encode_quan(pop_datamap);
+  }});
+});
+{% endhighlight %}
+</div>

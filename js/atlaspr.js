@@ -99,6 +99,19 @@ var AtlasPR = klass(function (options) {
                 d3.select(this).style("stroke-width", width);
                 self.options.events.on_mouseout && self.options.events.on_mouseout(d,this);
               });
+      // add labels, optionally
+      self.options.labels && self.svg.selectAll(".labels-pueblo")
+          .data(data.pueblos.features)
+          .enter()
+            .append("text")
+            .attr("transform", function(d) { return "translate(" + self.path_fn.centroid(d) + ")"; })
+            .attr("dy", ".35em")
+            .attr("class", "labels-pueblo")
+            .text(function(d) {return d.properties.NAME; })
+            .style("fill", "#555")
+            .style("fill-opacity", 0.5)
+            .style("font-size", 12)
+            .style("text-anchor", "middle");
       });
 
       if(self.options.on_ready){
@@ -115,17 +128,26 @@ var AtlasPR = klass(function (options) {
 
       // now we determine the projection's new scale, but there's a problem:
       // the map doesn't 'zoom onto the mouse point'
-      self.projection.scale(self.scale * d3.event.scale);
-      self.svg.selectAll("path").attr("d", self.path_fn);
+      self.update();
     }
   },
+  update: function(){
+    var self = this;
+    self.projection.scale(self.scale * d3.event.scale);
+    self.svg.selectAll("path").attr("d", self.path_fn);
+    self.svg.selectAll(".labels-pueblo").attr("transform", function(d) {;return "translate(" + self.path_fn.centroid(d) + ")"; })
+    self.svg.selectAll(".markers").attr("cx", function(d){return self.projection(d.center)[0]})
+      .attr("cy", function(d){return self.projection(d.center)[1]})
+  },
+  
   add_markers: function(markers_list){
     var self = this;
-    self.svg.selectAll("svg")
+    self.svg.selectAll(".markers")
       .data(markers_list)
       .enter()
         .append("svg:circle")
         .attr("r", 4.5)
+        .attr("class", "markers")
         .attr("cx", function(d){return self.projection(d.center)[0]})
         .attr("cy", function(d){return self.projection(d.center)[1]})
         .style("fill", self.colors(0))
@@ -187,7 +209,7 @@ var AtlasPR = klass(function (options) {
     self.translation = self.projection.translate();
     self.scale = self.projection.scale();
     self.svg.selectAll("path")
-      .transition()          
+      .transition()
         .duration(3000)
         .attr("d", self.path_fn)
         .each("end", function(d){
@@ -195,6 +217,18 @@ var AtlasPR = klass(function (options) {
             callback(d,this);
           }
         });
+    //update the position of labels, if any
+    self.options.labels && self.svg.selectAll(".labels-pueblo")
+      .transition()
+      .duration(3000)
+      .attr("transform", function(d) {return "translate(" + self.path_fn.centroid(d) + ")"; });
+
+    //update the position of markers if any
+    self.svg.selectAll(".markers")
+      .transition()
+      .duration(3000)
+      .attr("cx", function(d){return self.projection(d.center)[0]})
+      .attr("cy", function(d){return self.projection(d.center)[1]});
   },
   _zoom_to_random_pueblo: function(callback){
     var p = this.data.pueblos.features[Math.round(Math.random()*(this.data.pueblos.features.length - 1))];
@@ -212,6 +246,23 @@ var AtlasPR = klass(function (options) {
       .transition()          
         .duration(2000)
         .attr("d", self.path_fn);
+
+    //update state
+    self.translation = self.projection.translate();
+    self.scale = self.projection.scale();
+    
+    // update the position of labels, if any
+    self.options.labels && self.svg.selectAll(".labels-pueblo")
+      .transition()
+      .duration(2000)
+      .attr("transform", function(d) {return "translate(" + self.path_fn.centroid(d) + ")"; });
+
+    //update the position of markers if any
+    self.svg.selectAll(".markers")
+      .transition()
+      .duration(3000)
+      .attr("cx", function(d){return self.projection(d.center)[0]})
+      .attr("cy", function(d){return self.projection(d.center)[1]});
   },
   get_barrios_mapping: function(){
 

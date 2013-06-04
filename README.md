@@ -7,4 +7,4 @@ Free, open, interactive, detailed maps of Puerto Rico for your web applications.
 
 ### Notice
 
-Documentation for this project, including basic how tos is in progress. Visit our homepage and examples in the meantime. 
+Documentation for this project, including basic how tos is in progress. Visit our [homepage](https://github.com/miguelrios/atlaspr) and [examples page](http://miguelrios.github.io/atlaspr/examples.html) in the meantime. 

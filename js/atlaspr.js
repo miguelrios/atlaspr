@@ -5,7 +5,7 @@ var AtlasPR = klass(function (options) {
   this.options.events = options.events || {};
   //hack to make github pages work
   this.geotiles_path = 
-    (document.URL.indexOf("github") > 0 ? "http://miguelrios.github.io/atlaspr" : "../") + "geotiles/PATHGEN.json";
+    (document.URL.indexOf("github") > 0 ? "http://miguelrios.github.io/atlaspr" : "..") + "/geotiles/PATHGEN.json";
   this.center_ll = [-66.251367,18.20033];
   this.colors = d3.scale.category20c();
   this.maps = {};

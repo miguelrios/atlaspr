@@ -1,0 +1,17 @@
+---
+layout: default
+---
+  <h3>Pueblos</h3>
+<div id = 'pueblos-map'>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("pueblos-map");
+    new AtlasPR({node: node, tiles: 'pueblos', size: "large", on_ready: function on_ready(atlas){
+      var centroids = [];
+      atlas.data.pueblos.features.forEach(function(pueblo){
+        var centroid = d3.geo.centroid(pueblo);
+        centroids.push({center: centroid, text: pueblo.properties.NAME});
+      });
+      atlas.add_markers(centroids); 
+    }});
+  </script>
+</div>

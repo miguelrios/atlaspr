@@ -3,7 +3,9 @@ var AtlasPR = klass(function (options) {
   this.tiles = Array.isArray(options.tiles) ? options.tiles : [options.tiles || 'isla'];
   this.main_tile = this.tiles[0];
   this.options.events = options.events || {};
-  this.geotiles_path = "../geotiles/PATHGEN.json";
+  //hack to make github pages work
+  this.geotiles_path = 
+    (document.URL.indexOf("github") > 0 ? "http://miguelrios.github.io/atlaspr" : "..") + "/geotiles/PATHGEN.json";
   this.center_ll = [-66.251367,18.20033];
   this.colors = d3.scale.category20c();
   this.maps = {};

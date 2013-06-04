@@ -1,0 +1,31 @@
+---
+layout: default
+---
+    <h3>Isla</h3>
+<div id = 'isla-map'>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("isla-map");
+    var map = new AtlasPR({node: node, size: "large", tiles: 'isla'});
+  </script>
+</div>
+<h3>Pueblos</h3>
+<div id = 'pueblos-map'>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("pueblos-map");
+    var map = new AtlasPR({node: node, tiles: 'pueblos', size: "large"});
+  </script>
+</div>
+<h3>Barrios</h3>
+<div id = 'barrios-map'>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("barrios-map");
+    var map = new AtlasPR({node: node, size: "large", tiles: 'barrios'});
+  </script>
+</div>
+<h3>Todos</h3>
+<div id = 'ambos-map'>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("ambos-map");
+    var map = new AtlasPR({node: node, size: "large", tiles: ['barrios','pueblos', 'isla']});
+  </script>
+</div>

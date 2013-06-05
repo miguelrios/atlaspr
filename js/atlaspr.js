@@ -170,16 +170,14 @@ var AtlasPR = klass(function (options) {
     });
     var domain = [d3.min(a), d3.max(a)];
     
-    var quantize = d3.scale.quantize()
+    var quantize = d3.scale.linear()
         .domain(domain)
-        .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+        .range(["rgb(247,251,255)", "rgb(8,48,107)"]);
 
     this.maps[this.main_tile]
-      .style("fill", undefined)
-      .attr("class", function(d){
-        console.log(d3.select(this).attr("data-tiletype"))
+      .style("fill", function(d){
         var id = d.properties[d3.select(this).attr("data-tiletype")];
-        return quantize(+datamap[id]) || "grey";
+        return quantize(+datamap[id]) || "rgb(200,200,200)";
       });
   },
   zoom_to_pueblo: function(geo_id, callback){

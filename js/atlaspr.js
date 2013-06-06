@@ -90,7 +90,7 @@ var AtlasPR = klass(function (options) {
               .style("stroke-width", width)
               .style("fill", "rgba(255,255,255,0)")
               .style("stroke", "#333")
-              .on("click", function(d){self.options.events.on_click(d, this)})
+              .on("click", function(d){self.options.events.on_click && self.options.events.on_click(d, this)})
               .on("mouseover", function(d){
                 d3.select(this).style("stroke-width", 3);
                 self.options.events.on_mouseover && self.options.events.on_mouseover(d,this);

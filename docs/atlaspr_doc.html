@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>AtlasPR</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          
+          <h1>AtlasPR</h1>
+
+          
+        
+
+        
+      </div>
+
+      
+        
+        <p><strong>AtlasPR</strong> is a small library to generate interactive, detailed and customizable
+maps of Puerto Rico. It&#39;s built in top of the awesome <a href="http:d3js.org">d3.js</a>, 
+a library to manipulate documents based on data.</p>
+<p>AtlasPR maps are generated using <a href="http:www.w3.org/Graphics/SVG/">Scalable Vector Graphics (SVG)</a>, 
+a web standard that&#39;s supported in all modern web browsers. Sadly, it doesn&#39;t work in IE 8 or less.</p>
+<h2>Usage</h2>
+
+        
+      
+        
+        <p>AtlasPR relies heavily in configuration parameters, but adds flexibility with 
+functions to manipulate the maps and perform actions in them. The underlying geo data
+and SVG elements being drawn are also exposed in the API, so you can go crazy if that&#39;s your thing. </p>
+<p>Ok, let&#39;s create a basic map. </p>
+
+        
+          <div class='highlight'><pre><span class="keyword">new</span> AtlasPR();</pre></div>
+        
+      
+        
+        <p>That&#39;s it. That will generate an empty map with boundaries in every minucipality on the island.
+This map will be appened to your HTML document. But you probably want to have more flexibility than that.
+right? Ok. </p>
+<p>Assuming you have a <code>&lt;div id =&#39;map&#39;&gt;&lt;/div&gt;</code> somewhere in your HTML, you can do:</p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+<span class="keyword">new</span> AtlasPR({
+ node: my_node
+});</pre></div>
+        
+      
+        
+        <p>This will render the map in your div element. </p>
+<p><code>node</code> is an optional parameter. It accepts an HTML object, 
+like the <code>&lt;div&gt;</code> element we just passed. By <strong>default</strong> it&#39;s the <code>body</code> object.</p>
+<p>But now the map will have a predetermined size (960px x 320px). 
+You may want to control this too. Let&#39;s see... right now, there are four possible sizes, 
+you can control this by adding the parameter <code>size</code> to the options. This is not optimal,
+in the future, i&#39;d like the maps to be bounded to the parent element. But that&#39;s another story. </p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+<span class="keyword">new</span> AtlasPR({
+ node: my_node, 
+ size: <span class="string">"large"</span>
+});</pre></div>
+        
+      
+        
+        <p><code>size</code> is an optional parameter. It&#39;s a string, with four possible values. </p>
+<ul>
+<li><code>small</code>: 480px x 160px</li>
+<li><code>medium</code>: 960px x 320px</li>
+<li><code>large</code>: 1200px x 400px</li>
+<li><code>xlarge</code>: 2400px x 800px</li>
+</ul>
+<p>By <strong>default</strong> this parameter is <code>medium</code>.</p>
+<p>The municipalities map is nice, but you may want more details. Let&#39;s see you want to 
+draw a map with all the barrios in it. Puerto Rico has more than 900 barrios. 
+AtlasPR can draw all of them for you by adding a simple parameter, <code>tiles</code>.</p>
+<p>Let&#39;s start with a simple one. 
+Let&#39;s draw only all the barrios. </p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+<span class="keyword">new</span> AtlasPR({
+ node: my_node, 
+ size: <span class="string">"large"</span>, 
+ tiles: <span class="string">"barrios"</span>
+ });</pre></div>
+        
+      
+        
+        <p><code>tiles</code> can be either a single string or an array of them and it&#39;s <code>pueblos</code> by default. 
+There are three supported options right now: </p>
+<ul>
+<li><code>isla</code>: draw the outline of Puerto Rico, including Vieques and Culebra</li>
+<li><code>pueblos</code>: draw the outline of all 78 municipalities.</li>
+<li><code>barrios</code>: draw the outline of all 902 barrios.</li>
+</ul>
+<p>You can combine these tiles to draw an even more detailed map. Here&#39;s an example of
+using all three of them: </p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+<span class="keyword">new</span> AtlasPR({
+ node: my_node, 
+ size: <span class="string">"large"</span>, 
+ tiles: [<span class="string">"isla"</span>, <span class="string">"pueblos"</span>, <span class="string">"barrios"</span>]
+});</pre></div>
+        
+      
+        
+        <p>This will draw the island borders, the municipalities borders and the barrios borders.</p>
+<p>Now, one of the beauties of SVG is that the graphics are scalable. You can zoom them in 
+and they will preserve their details. Let&#39;s try this by adding the <code>zoom</code> property
+to the options object: </p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+<span class="keyword">new</span> AtlasPR({
+ node: my_node, 
+ size: <span class="string">"large"</span>, 
+ tiles: [<span class="string">"isla"</span>, <span class="string">"pueblos"</span>, <span class="string">"barrios"</span>], 
+ zoom: <span class="literal">true</span>
+});</pre></div>
+        
+      
+        
+        <p>Now hover over the map and double click, or zoom it in gradually by scrolling. 
+You can also move the map around by dragging it. Isn&#39;t that awesome?</p>
+<p><code>zoom</code> is a boolean option and is <code>false</code> by <strong>default</strong>.</p>
+<p>When you hover a map with either pueblos or barrios boundaries, you can see there&#39;s 
+a ticker border in the hovered items. You can attach other actions if you want, 
+like showing a message when you hover or better, when you click an element. </p>
+<p>For this, there&#39;s the <code>events</code> parameter, which is an object with two supported options:</p>
+<ul>
+<li><code>on_click(feature, svg_path)</code>: Executed whenever you click a tile. It contains two objects you can manipulate: <ul>
+<li><code>feature</code>: The GeoJSON feature you clicked. Useful if you want to know information about the object you clicked (e.g. the name of the minucipality). Read more on GeoJSON features.</li>
+<li><code>svg_path</code>: The SVG <code>path</code> element you are clicking. Useful to manipulate visual information about it (e.g.: change its color to red). Read more about these SVG objects.</li>
+</ul>
+</li>
+<li><code>on_hover(feature, svg_path)</code>: Executed whenever you hover over a tile. It contains two objects you can manipulate: <code>feature</code> and <code>svg_path</code>, explained above in <code>on_click</code>.</li>
+</ul>
+<p>Let&#39;s code an example. Easy, whenever you click on a municipality, let&#39;s show a message with it&#39;s name. </p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+<span class="keyword">new</span> AtlasPR({
+ node: my_node, 
+ size: <span class="string">"large"</span>, 
+ tiles: [<span class="string">"pueblos"</span>], 
+ zoom: <span class="literal">true</span>,
+ events: {
+  on_click: <span class="keyword">function</span>(feature, svg_path){alert(feature.properties.NAME);}
+ }
+});</pre></div>
+        
+      
+        
+        <p>Not that hard, right? Now let&#39;s change the color of the hovered barrio to red. </p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+<span class="keyword">new</span> AtlasPR({
+ node: my_node, 
+ size: <span class="string">"large"</span>, 
+ tiles: [<span class="string">"barrios"</span>], 
+ zoom: <span class="literal">true</span>,
+ events: {
+  on_hover: <span class="keyword">function</span>(feature, svg_path){d3.select(svg_path).style(<span class="string">"fill"</span>, <span class="string">"red"</span>)}
+ }
+});</pre></div>
+        
+      
+        
+        <h2>Performing actions on maps</h2>
+
+        
+      
+        
+        <p>Now to the cool part. AtlasPR has support for performing some actions after drawing the maps. 
+The tiles used to render the maps are rendered asynchronously, so anything we want to do to the map
+after drawing it has to be done as a callback function that will be executed after the map is rendered.</p>
+<p>That function can be passed as the <code>on_ready</code> parameter in the options object. This function has
+the AtlasPR map as a parameter, so you can perform the supported actions or even manipulate the SVG yourself
+using d3.</p>
+<p>Confusing? I know. Let&#39;s do some examples to clarify things up. One of the supported functions is called <code>AtlasPR.zoom_to_pueblo</code>.
+This function takes the name of a municipality and zooms the map into it. It calculate the exact zoom that;s necessary to show the 
+municipality without clipping it or not zooming enough. Let&#39;s try this. </p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+<span class="function"><span class="keyword">function</span> <span class="title">zoom_to_barranquitas</span><span class="params">(atlaspr)</span>{</span>
+  atlaspr.zoom_to_pueblo(<span class="string">"Barranquitas"</span>);
+}
+<span class="keyword">new</span> AtlasPR({
+  node: my_node,
+  size: <span class="string">"large"</span>,
+  tiles: [<span class="string">"pueblos"</span>], 
+  zoom: <span class="literal">true</span>,
+  on_ready: zoom_to_barranquitas
+});</pre></div>
+        
+      
+        
+        <p><code>zoom_to_pueblo</code> accepts an optional second parameter, a callback that will be executed after the map zooms to the specified pueblo.</p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+<span class="function"><span class="keyword">function</span> <span class="title">zoom_to_barranquitas</span><span class="params">(atlaspr)</span>{</span>
+  atlaspr.zoom_to_pueblo(<span class="string">"Barranquitas"</span>, <span class="keyword">function</span>(){
+    atlaspr.zoom_to_original();
+  });
+};
+<span class="keyword">new</span> AtlasPR({
+  node: my_node,
+  size: <span class="string">"large"</span>,
+  tiles: [<span class="string">"pueblos"</span>], 
+  zoom: <span class="literal">true</span>,
+  on_ready: zoom_to_barranquitas
+});</pre></div>
+        
+      
+        
+        <p>Whaaa? What&#39;s <code>zoom_to_original</code> you ask? It&#39;s another supported function that zooms a map back to the original view. It also accepts a callback so you can do something after the map gets zoomed to the original view. </p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+<span class="function"><span class="keyword">function</span> <span class="title">zoom_to_barranquitas</span><span class="params">(atlaspr)</span>{</span>
+  atlaspr.zoom_to_pueblo(<span class="string">"Barranquitas"</span>, <span class="keyword">function</span>(){
+    atlaspr.zoom_to_original(<span class="keyword">function</span>(){alert(<span class="string">"cool?"</span>)});
+  });
+};
+<span class="keyword">new</span> AtlasPR({
+  node: my_node,
+  size: <span class="string">"large"</span>,
+  tiles: [<span class="string">"pueblos"</span>], 
+  zoom: <span class="literal">true</span>,
+  on_ready: zoom_to_barranquitas
+});</pre></div>
+        
+      
+        
+        <h2>Coloring maps</h2>
+
+        
+      
+        
+        <p>AtlasPR supports two ways of coloring tiles in maps, <code>encode_qual</code> and <code>encode_quan</code>. The first one accepts a map from
+the id of a municipality or barrio to a particular color, the second one accepts a map from the id of a municipality or barrio
+to a number, we do the coloring for you. </p>
+<p>Examples: </p>
+<p>Coloring municipalities either red or blue, depending on which party is in power (data in <a href="https://github.com/commonwealth-of-puerto-rico/atlaspr/blob/master/data/">https://github.com/commonwealth-of-puerto-rico/atlaspr/blob/master/data/</a>).</p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"map"</span>);
+d3.json(<span class="string">"data/munidata.json"</span>, <span class="keyword">function</span>(data){
+  <span class="keyword">var</span> party_datamap = {};
+  data.forEach(<span class="keyword">function</span>(pueblo){
+    <span class="keyword">var</span> fips_3digits = pueblo.fips.length == <span class="number">1</span> ? (<span class="string">"00"</span> + pueblo.fips) : 
+      (pueblo.fips.length == <span class="number">2</span> ? (<span class="string">"0"</span> + pueblo.fips) : pueblo.fips);
+    party_datamap[fips_3digits] = pueblo.party;
+  });
+  <span class="keyword">var</span> party_map = <span class="keyword">new</span> AtlasPR({node: my_node, size: <span class="string">"large"</span>,tiles: <span class="string">'pueblos'</span>, on_ready: <span class="keyword">function</span>(){
+    party_map.encode_qual(party_datamap, {<span class="string">"PPD"</span>: <span class="string">"#ff0000"</span>, <span class="string">"PNP"</span>: <span class="string">"#0000ff"</span>});
+  }});
+});</pre></div>
+        
+      
+        
+        <p><code>AtlasPR.encode_qual(datamap, colormap)</code> accepts a map of pueblo or barrio id to a string value, and a second parameter
+with a map from possible values (in this case PPD and PNP) to the colors you want to color the map.</p>
+<p>Coloring barrios by the percentage of families over poverty levels (data in <a href="https://github.com/commonwealth-of-puerto-rico/atlaspr/blob/master/data/">https://github.com/commonwealth-of-puerto-rico/atlaspr/blob/master/data/</a>).</p>
+
+        
+          <div class='highlight'><pre><span class="keyword">var</span> my_node = document.getElementById(<span class="string">"pobreza-map"</span>);
+d3.json(<span class="string">"data/barriosdata.json"</span>, <span class="keyword">function</span>(data){
+  <span class="keyword">var</span> pob_datamap = {};
+  data.forEach(<span class="keyword">function</span>(barrio){
+    <span class="keyword">if</span>(barrio.below_poverty != <span class="literal">null</span>){
+      pob_datamap[barrio.geo_id.substring(<span class="number">14</span>)] = barrio.below_poverty;
+    }
+  });
+  <span class="keyword">var</span> pop_map = <span class="keyword">new</span> AtlasPR({node: my_node, tiles: <span class="string">'barrios'</span>, size: <span class="string">"large"</span>, on_ready: <span class="keyword">function</span>(){
+    pop_map.encode_quan(pob_datamap);
+  }});
+});</pre></div>
+        
+      
+        
+        <p><code>AtlasPR.encode_quan</code> accepts one parameter: a map from pueblo or barrio id to the number you want to map. </p>
+
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

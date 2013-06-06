@@ -41,7 +41,7 @@ AtlasPR makes it easy to developers who want to color maps of Puerto Rico by pue
 ### Compatibility
 AtlasPR does not work in old browsers, particularly in Internet Explorer 8 and less. This is because we use SVG to render tiles. SVG is a web standard for scalable web graphics, and it's implemented in every modern browser.
 
-### Acknoledgements
+### Acknowledgements
 This library is just a few lines of code written in the shoulders of an awesome giant called [d3.js](htttp://d3js.org).
 
 ### Contributions

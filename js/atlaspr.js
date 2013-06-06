@@ -1,9 +1,10 @@
 var AtlasPR = klass(function (options) {
-  this.options = options;  
+  this.options = options; 
+  this.node = this.options.node; 
   this.tiles = Array.isArray(options.tiles) ? options.tiles : [options.tiles || 'isla'];
   this.main_tile = this.tiles[0];
   this.options.events = options.events || {};
-  //hack to make github pages work
+  // hack to make github pages work.
   this.geotiles_path = 
     (document.URL.indexOf("github") > 0 ? "http://miguelrios.github.io/atlaspr" : "..") + "/geotiles/PATHGEN.json";
   this.center_ll = [-66.251367,18.20033];
@@ -47,7 +48,7 @@ var AtlasPR = klass(function (options) {
     var self = this;
     
     var color_scale = d3.scale.category20b();
-    self.svg = d3.select(this.options.node).append("svg")
+    self.svg = d3.select(this.node || "body").append("svg")
       .attr("width", this.width)
       .attr("height", this.height)
       .call(d3.behavior.zoom().on("zoom", this.options.zoom && redraw));
@@ -59,7 +60,6 @@ var AtlasPR = klass(function (options) {
 
     self.translation = self.projection.translate(); // the projection's default translation
     self.scale = self.projection.scale(); // the projection's default translation
-      // .translate([width / 2, height / 2]);
     self.path_fn = d3.geo.path()
         .projection(self.projection);
 
@@ -90,7 +90,7 @@ var AtlasPR = klass(function (options) {
               .style("stroke-width", width)
               .style("fill", "rgba(255,255,255,0)")
               .style("stroke", "#333")
-              .on("click",self.options.events.on_click)
+              .on("click", function(d){self.options.events.on_click(d, this)})
               .on("mouseover", function(d){
                 d3.select(this).style("stroke-width", 3);
                 self.options.events.on_mouseover && self.options.events.on_mouseover(d,this);
@@ -128,16 +128,8 @@ var AtlasPR = klass(function (options) {
 
       // now we determine the projection's new scale, but there's a problem:
       // the map doesn't 'zoom onto the mouse point'
-      self.update();
+      self._update();
     }
-  },
-  update: function(){
-    var self = this;
-    self.projection.scale(self.scale * d3.event.scale);
-    self.svg.selectAll("path").attr("d", self.path_fn);
-    self.svg.selectAll(".labels-pueblo").attr("transform", function(d) {;return "translate(" + self.path_fn.centroid(d) + ")"; })
-    self.svg.selectAll(".markers").attr("cx", function(d){return self.projection(d.center)[0]})
-      .attr("cy", function(d){return self.projection(d.center)[1]})
   },
   
   add_markers: function(markers_list){
@@ -228,11 +220,6 @@ var AtlasPR = klass(function (options) {
       .attr("cx", function(d){return self.projection(d.center)[0]})
       .attr("cy", function(d){return self.projection(d.center)[1]});
   },
-  _zoom_to_random_pueblo: function(callback){
-    var p = this.data.pueblos.features[Math.round(Math.random()*(this.data.pueblos.features.length - 1))];
-    this.zoom_to_pueblo(p.properties.COUNTY, callback);
-    return p;
-  },
 
   zoom_to_original: function(callback){
     var self = this;
@@ -263,9 +250,25 @@ var AtlasPR = klass(function (options) {
       .attr("cy", function(d){return self.projection(d.center)[1]});
   },
   get_barrios_mapping: function(){
-
+    /* to be implemented */
   },
   get_pueblos_mapping: function(){
+    /* to be implemented */
+  },
 
-  }
+  //Private, undocumented functions.
+  _zoom_to_random_pueblo: function(callback){
+    var p = this.data.pueblos.features[Math.round(Math.random()*(this.data.pueblos.features.length - 1))];
+    this.zoom_to_pueblo(p.properties.COUNTY, callback);
+    return p;
+  },
+
+  _update: function(){
+    var self = this;
+    self.projection.scale(self.scale * d3.event.scale);
+    self.svg.selectAll("path").attr("d", self.path_fn);
+    self.svg.selectAll(".labels-pueblo").attr("transform", function(d) {;return "translate(" + self.path_fn.centroid(d) + ")"; })
+    self.svg.selectAll(".markers").attr("cx", function(d){return self.projection(d.center)[0]})
+      .attr("cy", function(d){return self.projection(d.center)[1]})
+  },
 })

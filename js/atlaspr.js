@@ -25,7 +25,7 @@ var AtlasPR = klass(function (options) {
   };
   this.size_attributes = {
     "small": {
-      width: 480,
+      width: 480
     },
     "medium": {
       width: 960
@@ -37,12 +37,27 @@ var AtlasPR = klass(function (options) {
       width: 2400
     }
   };
-  this.width = this.size_attributes[this.options.size || "medium"].width;
+	this.width = this.options.size;
+  //this.width = this.size_attributes[this.options.size || "medium"].width;
   this.height = this.width/3;
   this.original_scale = this.width*27;
   this.draw();
 })
 .methods({
+	/* methods
+
+	draw()
+	update()
+	add_markers()
+	encode_quan()
+	encode_qual()
+	zoom_to_pueblo()
+	_zoom_to_random_pueblo()
+	zoom_to_original()
+	get_barrios_mapping()
+	get_pueblos_mapping()
+
+	*/
   draw: function () {
     var self = this;
     

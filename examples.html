@@ -1,0 +1,21 @@
+---
+layout: default
+examples:
+  - zoom
+  - todos
+  - pueblos
+  - poverty
+  - population
+  - politics
+  - markers
+  - labels
+  - isla
+  - complex
+---
+<div id = "examples">
+  {% for example in page.examples %}
+   <a href = "{{ example }}.html">
+    <img style = 'width: 320px' src = "./images/{{ example }}.png">
+  </a>
+  {% endfor %}
+</div>

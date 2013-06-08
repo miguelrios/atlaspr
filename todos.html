@@ -1,0 +1,17 @@
+---
+layout: default
+---
+<h3>All tiles</h3>
+<div id = 'all-map'>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("all-map");
+    var map = new AtlasPR({node: node, size: "large", tiles: ['barrios', 'pueblos','isla']});
+  </script>
+</div>
+<div id = "code">
+{% highlight js linenos %}
+// change the argument to match your id
+var node = document.getElementById("all-map");
+var map = new AtlasPR({node: node, size: "large", tiles: ['barrios', 'pueblos','isla']});
+{% endhighlight %}
+</div>

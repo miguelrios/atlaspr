@@ -1,0 +1,17 @@
+---
+layout: default
+---
+<h3>Isla</h3>
+<div id = 'isla-map'>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("isla-map");
+    var map = new AtlasPR({node: node, size: "large", tiles: 'isla'});
+  </script>
+</div>
+<div id = "code">
+{% highlight js linenos %}
+// change the argument to match your id
+var node = document.getElementById("isla-map");
+var map = new AtlasPR({node: node, size: "large", tiles: 'isla'});
+{% endhighlight %}
+</div>

@@ -1,0 +1,18 @@
+---
+layout: default
+---
+  <h3>Pueblos - zoomable with labels.</h3>
+<div id = 'pueblos-map'>
+  <script type = 'text/javascript'>
+    // change the argument to match your id
+    var node = document.getElementById("pueblos-map");
+    new AtlasPR({node: node, tiles: 'pueblos', size: "large", labels: true, zoom: true});
+  </script>
+</div>
+<div id = "code">
+{% highlight js linenos %}
+// change the argument to match your id
+var node = document.getElementById("pueblos-map");
+new AtlasPR({node: node, tiles: 'pueblos', size: "large", labels: true, zoom: true});
+{% endhighlight%}
+</div>

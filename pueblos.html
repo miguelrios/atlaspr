@@ -1,0 +1,17 @@
+---
+layout: default
+---
+<h3>Isla</h3>
+<div id = 'pueblos-map'>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("pueblos-map");
+    var map = new AtlasPR({node: node, size: "large", tiles: 'pueblos'});
+  </script>
+</div>
+<div id = "code">
+{% highlight js linenos %}
+// change the argument to match your id
+var node = document.getElementById("pueblos-map");
+var map = new AtlasPR({node: node, size: "large", tiles: 'pueblos'});
+{% endhighlight %}
+</div>

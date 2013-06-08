@@ -1,0 +1,42 @@
+---
+layout: default
+---
+    <h2>Examples<small>Barrios maps (<a href = "https://github.com/miguelrios/atlaspr/blob/master/examples/barrios.html">source code</a>)</small></h2>
+  <h3>Barrios - % of families under poverty level</h3>
+  <div id = 'pobreza-map'>
+  </div>
+
+<script type = 'text/javascript'>
+  var node = document.getElementById("pobreza-map");
+  d3.json("data/barriosdata.json", function(data){
+    var pob_datamap = {};
+    data.forEach(function(barrio){
+      if(barrio.below_poverty != null){
+        // get tile id from metadata GEO_ID, last 5 chars from 19.
+        pob_datamap[barrio.geo_id.substring(14)] = barrio.below_poverty;
+      }
+    });
+    var pop_map = new AtlasPR({node: node, tiles: 'barrios', size: "large", on_ready: function(){
+      // this needs to be called after drawing the map.
+      pop_map.encode_quan(pob_datamap);
+    }});
+  });
+</script>
+<div id = "code">
+{% highlight js linenos %}
+var node = document.getElementById("pobreza-map");
+d3.json("data/barriosdata.json", function(data){
+  var pob_datamap = {};
+  data.forEach(function(barrio){
+    if(barrio.below_poverty != null){
+      // get tile id from metadata GEO_ID, last 5 chars from 19.
+      pob_datamap[barrio.geo_id.substring(14)] = barrio.below_poverty;
+    }
+  });
+  var pop_map = new AtlasPR({node: node, tiles: 'barrios', size: "large", on_ready: function(){
+    // this needs to be called after drawing the map.
+    pop_map.encode_quan(pob_datamap);
+  }});
+});
+{% endhighlight %}
+</div>

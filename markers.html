@@ -1,0 +1,47 @@
+---
+layout: default
+---
+<h3>Pueblos with markers in centroids.</h3>
+<div id = 'pueblos-map'>
+  <script type = 'text/javascript'>
+    // change the argument to match your id
+    var node = document.getElementById("pueblos-map");
+    function after_loading(atlas){
+      var centroids = [];
+      atlas.data.pueblos.features.forEach(function(pueblo){
+        var centroid = d3.geo.centroid(pueblo);
+        centroids.push({center: centroid, text: pueblo.properties.NAME});
+      });
+      atlas.add_markers(centroids); 
+    };
+    var config = {
+      node: node, 
+      tiles: 'pueblos', 
+      size: "large",      
+      on_ready: after_loading
+    }; 
+    new AtlasPR(config);
+  </script>
+  <div id = "code">
+{% highlight js linenos %}
+// change the argument to match your id
+var node = document.getElementById("pueblos-map");
+function after_loading(atlas){
+  var centroids = [];
+  atlas.data.pueblos.features.forEach(function(pueblo){
+    var centroid = d3.geo.centroid(pueblo);
+    centroids.push({center: centroid, text: pueblo.properties.NAME});
+  });
+  atlas.add_markers(centroids); 
+};
+var config = {
+  node: node, 
+  tiles: 'pueblos', 
+  size: "large", 
+  zoom: true, 
+  on_ready: after_loading
+}; 
+new AtlasPR(config);
+{% endhighlight %}
+  </div>
+</div>

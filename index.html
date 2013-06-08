@@ -1,0 +1,51 @@
+---
+layout: default
+---
+  <div id = 'map'></div>
+  <p id = 'barrio'></p>
+  <p id = 'pueblo'></p>
+  <script type = 'text/javascript'>
+    var node = document.getElementById("map");
+    var color = d3.scale.category20b();
+    var ready = function ready(atlas){
+      atlas.maps['pueblos'].style("fill", function(){
+        var index = Math.round(Math.random()*20);
+        return color(index);
+      });
+      atlas.maps['pueblos'].style("fill-opacity", 0.5);
+      var index = 0;
+      var first_animation = function first_animation(){
+        index++;
+        if(index <= 3){
+          var pueblo = atlas._zoom_to_random_pueblo(function(info, tile){
+            d3.select(tile).style("fill", "red");
+            d3.select("#pueblo").text(pueblo.properties.NAME);
+          });
+        } else{
+          clearInterval(interval);
+          atlas.zoom_to_original();
+          d3.select("#pueblo").text("");
+          index = 0;
+          interval = setInterval(second_animation,100);
+        }
+      }
+      var second_animation = function second_animation(){
+        var random_tile = atlas.maps['barrios'][0][index++];
+        var tile = d3.select(random_tile).style("fill", color(10));
+        d3.select("#barrio").text(tile.attr("data-name"));
+        if(index >= atlas.maps['barrios'][0].length){
+          clearInterval(interval);
+        }
+      }
+      var interval = setInterval(first_animation, 5000);
+    }
+
+    var hover = function hover(info, path){
+      d3.select("#pueblo").text(info.properties.NAME);
+    };
+    new AtlasPR({zoom: true, node: node, size: "large" ,tiles: ["isla",'barrios','pueblos'], on_ready: ready,
+      events: {
+        on_mouseover: hover
+      }
+    });
+  </script>

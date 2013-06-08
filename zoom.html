@@ -1,0 +1,56 @@
+---
+layout: default
+---
+<h3>Zoom to specific pueblo and then back to the original.</h3>
+<div id = 'pueblos-map'>
+  <script type = 'text/javascript'>
+    // change the argument to match your id
+    var node = document.getElementById("pueblos-map");
+    var after_drawing = function after_drawing(atlas){
+      atlas.zoom_to_pueblo("Barranquitas", 
+        // zoom happens in some time, function gets called at the end of zooming.
+        function(){
+          atlas.zoom_to_pueblo("Mayagüez", 
+            // zoom happens in some time, function gets called at the end of zooming.
+            function(){
+              atlas.zoom_to_original();
+          })
+        });
+    };
+    var config = {
+      node: node, 
+      tiles: 'pueblos',
+      size: "large",   
+      zoom: true,
+      labels: true,
+      on_ready: after_drawing
+    }; 
+    new AtlasPR(config);
+  </script>
+  <div id = "code">
+{% highlight js linenos %}
+// change the argument to match your id
+var node = document.getElementById("pueblos-map");
+var after_drawing = function after_drawing(atlas){
+  atlas.zoom_to_pueblo("Barranquitas", 
+    // zoom happens in some time, function gets called at the end of zooming.
+    function(){
+      atlas.zoom_to_pueblo("Mayagüez", 
+        // zoom happens in some time, function gets called at the end of zooming.
+        function(){
+          atlas.zoom_to_original();
+      })
+    });
+};
+var config = {
+  node: node, 
+  tiles: 'pueblos',
+  size: "large",   
+  zoom: true,
+  labels: true,
+  on_ready: after_drawing
+}; 
+new AtlasPR(config);
+{% endhighlight %}
+  </div>
+</div>

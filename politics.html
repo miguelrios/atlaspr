@@ -1,0 +1,42 @@
+---
+layout: default
+---
+  <h3>Pueblos - Partidos Políticos en el poder (2012)</h3>
+<div id = 'partidos-map'>
+
+</div>
+<script type = 'text/javascript'>
+  var node = document.getElementById("partidos-map");
+  d3.json("data/munidata.json", function(data){
+    var party_datamap = {};
+    data.forEach(function(pueblo){
+      //get id of pueblo with leading 0s.
+      var fips_3digits = pueblo.fips.length == 1 ? ("00" + pueblo.fips) : 
+        (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
+      party_datamap[fips_3digits] = pueblo.party;
+    });
+    var party_map = new AtlasPR({node: node, size: "large",tiles: 'pueblos', on_ready: function(){
+      // gotta wait until the map is drawn to color it.
+      party_map.encode_qual(party_datamap, {"PPD": "#BA1E26", "PNP": "#235BC2"});
+    }});
+  });
+</script>
+<div id = "code">
+{% highlight js linenos %}
+// change the argument to match your id
+var node = document.getElementById("partidos-map");
+d3.json("data/munidata.json", function(data){
+  var party_datamap = {};
+  data.forEach(function(pueblo){
+    //get id of pueblo with leading 0s.
+    var fips_3digits = pueblo.fips.length == 1 ? ("00" + pueblo.fips) : 
+      (pueblo.fips.length == 2 ? ("0" + pueblo.fips) : pueblo.fips);
+    party_datamap[fips_3digits] = pueblo.party;
+  });
+  var party_map = new AtlasPR({node: node, size: "large",tiles: 'pueblos', on_ready: function(){
+    // gotta wait until the map is drawn to color it.
+    party_map.encode_qual(party_datamap, {"PPD": "#ff0000", "PNP": "#0000ff"});
+  }});
+});
+{% endhighlight %}
+</div>

@@ -5,7 +5,7 @@ var AtlasPR = klass(function (options) {
   this.options.events = options.events || {};
   //hack to make github pages work
   this.geotiles_path = 
-    (document.URL.indexOf("github") > 0 ? "http://miguelrios.github.io/atlaspr" : "..") + "/geotiles/PATHGEN.json";
+    (document.URL.indexOf("github") > 0 ? "http://miguelrios.github.io/atlaspr" : "atlaspr") + "/geotiles/PATHGEN.json";
   this.center_ll = [-66.251367,18.20033];
   this.colors = d3.scale.category20c();
   this.maps = {};
@@ -82,26 +82,24 @@ var AtlasPR = klass(function (options) {
       // zoom to island
       self.data = data;
       self.indexed_data = {};
-
       self.tiles.forEach(function(tile){
         var width = self.meta_attributes[tile].width;
         var tiletype = self.meta_attributes[tile].id;
         self.indexed_data[tile] = {};
-
-        self.maps[tile] = self.svg.selectAll("." + tile)
+		self.maps[tile] = self.svg.selectAll("." + tile)
           .data(data[tile].features)
           .enter()
             .append("path")  
               .attr("d", self.path_fn)
               .attr("class", tile)
               .attr("data-tiletype",tiletype)
-              .attr("data-name",function(d){
+              .attr("id",function(d){
                 var id = d.properties[self.meta_attributes[tile].id];
                 self.indexed_data[tile][id] = d;
                 if(d.properties.NAME){
                   self.indexed_data[tile][d.properties.NAME.toLowerCase()] = d;
                 }
-                return d.properties.NAME})
+                return d.properties.NAME.toLowerCase().replace(" ", "")})
               .style("stroke-width", width)
               .style("fill", "rgba(255,255,255,0)")
               .style("stroke", "#333")

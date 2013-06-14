@@ -49,7 +49,7 @@ This library is just a few lines of code written in the shoulders of an awesome 
 ### Contributions
 Feel free to open issues whenever you find a bug or think about that awesome feature you want implemented in this library. Even better, fork the repo, implement them and submit a pull request.
 
-### Documentation [in progress]
+# Documentation [in progress]
 Reading through Miguel source there seem to be about 10 functions:
 	
 	draw()
